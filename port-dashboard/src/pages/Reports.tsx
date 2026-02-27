@@ -1,5 +1,7 @@
 import React from 'react';
 import { Star, Search, FileText } from 'lucide-react';
+import type { Role } from './Auth';
+
 
 const terminalReports = [
     { id: 't1', name: 'Santos Brasil', status: 'Operacional', requests: 312, avgResponseTime: '18 min', satisfaction: 9.2 },
@@ -53,7 +55,7 @@ function buildAutoReport(data: any, selected: any, section: string) {
     return `O terminal **${terminalName}**, na área de **${serviceName}**, obteve um total de **${total} avaliações** recentes. Destas, foram registrados **${elogios} elogios** e **${criticas} críticas**. A nota média alcançada foi de **${avgScore}/10**. Em resumo, a análise dos comentários indica que ${resumo}`;
 }
 
-export function ReportsContent({ data }: { data: any }) {
+export function ReportsContent({ data, role }: { data: any; role: Role }) {
     const [serviceReports, setServiceReports] = React.useState(initialServiceReports);
     const [section, setSection] = React.useState<'services' | 'terminals'>('services');
     const [search, setSearch] = React.useState('');
@@ -205,15 +207,17 @@ export function ReportsContent({ data }: { data: any }) {
                     <h1 className="text-2xl font-bold text-gray-800">Relatórios e Serviços</h1>
                     <p className="text-gray-500 text-sm mt-1">Acompanhe métricas detalhadas dos serviços portuários</p>
                 </div>
-                <div className="flex gap-3">
-                    <button onClick={() => { setIsReportModalOpen(true); setGeneratedReportText(''); }}
-                        className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg shadow-sm text-sm font-medium transition-colors flex items-center gap-2">
-                        ✨ Gerar Texto Descritivo
-                    </button>
-                    <button className="px-4 py-2 bg-port-accent hover:bg-blue-600 text-white rounded-lg shadow-sm text-sm font-medium transition-colors flex items-center gap-2">
-                        <FileText size={18} /> Exportar
-                    </button>
-                </div>
+                {role === 'superadmin' && (
+                    <div className="flex gap-3">
+                        <button onClick={() => { setIsReportModalOpen(true); setGeneratedReportText(''); }}
+                            className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg shadow-sm text-sm font-medium transition-colors flex items-center gap-2">
+                            ✨ Gerar Texto Descritivo
+                        </button>
+                        <button className="px-4 py-2 bg-port-accent hover:bg-blue-600 text-white rounded-lg shadow-sm text-sm font-medium transition-colors flex items-center gap-2">
+                            <FileText size={18} /> Exportar
+                        </button>
+                    </div>
+                )}
             </div>
 
             {isReportModalOpen && (
@@ -363,7 +367,7 @@ export function ReportsContent({ data }: { data: any }) {
                                         <div className="flex items-center justify-end gap-2">
                                             <button onClick={() => setSelected(item)}
                                                 className="text-port-accent hover:text-blue-800 text-xs font-semibold px-2 py-1 rounded bg-blue-50 hover:bg-blue-100 transition-colors">Relatório</button>
-                                            {section === 'services' && (
+                                            {section === 'services' && role === 'superadmin' && (
                                                 <>
                                                     <button onClick={(e) => handleEditService(item.id, e)} className="text-gray-600 hover:text-blue-600 text-xs font-medium px-2 py-1 rounded bg-gray-50 hover:bg-gray-100 transition-colors">Editar</button>
                                                     <button onClick={(e) => handleDeleteService(item.id, e)} className="text-red-500 hover:text-red-700 text-xs font-medium px-2 py-1 rounded bg-red-50 hover:bg-red-100 transition-colors">Excluir</button>
