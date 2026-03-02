@@ -23,17 +23,11 @@ export function CreateCommentContent() {
     const [isPublic, setIsPublic] = React.useState(true);
     const [submitted, setSubmitted] = React.useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (needsRating(type) && rating === 0) return;
         const newReview = { user: 'Admin Silva', terminal, service, type, rating: needsRating(type) ? rating : null, comment, isPublic, time: 'agora mesmo' };
-        try {
-            await fetch('http://localhost:3001/recentReviews', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newReview),
-            });
-        } catch { console.warn('Could not save to server.'); }
+        console.log('Novo registro enviado:', newReview);
         setSubmitted(true);
     };
 
