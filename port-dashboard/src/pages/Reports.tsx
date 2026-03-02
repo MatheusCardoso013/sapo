@@ -32,27 +32,78 @@ function statusBadge(s: string) {
     return 'bg-red-100 text-red-800';
 }
 
-function buildAutoReport(data: any, selected: any, section: string) {
+function buildAutoReport(data: any, selected: any, section: string, fallbackReviews: any[]) {
     const { recentReviews = [] } = data || {};
-    const filteredReviews = recentReviews.filter((r: any) =>
+    let filteredReviews = recentReviews.filter((r: any) =>
         section === 'terminals' ? r.terminal === selected.name : (r.terminal === selected.terminal && r.service === selected.name)
     );
-    const total = filteredReviews.length;
-    let elogios = 0, criticas = 0, sumScore = 0, countRating = 0;
-    filteredReviews.forEach((r: any) => {
-        if (r.type === 'Elogio' || (r.rating && r.rating >= 8)) elogios++;
-        else if (r.type === 'Crítica' || (r.rating && r.rating <= 5)) criticas++;
-        if (r.rating !== undefined && r.rating !== null) { sumScore += Number(r.rating); countRating++; }
-    });
-    const avgScore = countRating > 0 ? (sumScore / countRating).toFixed(1) : 'N/A';
-    let resumo = '';
-    if (total === 0) resumo = 'não há comentários suficientes para uma análise detalhada deste período.';
-    else if (elogios >= criticas && elogios > 0) resumo = 'a maioria dos usuários está satisfeita com a agilidade e o profissionalismo na operação, destacando o bom desempenho da equipe.';
-    else if (criticas > elogios) resumo = 'existem pontos de atenção urgentes, especialmente com reclamações de lentidão e falhas no fluxo que precisam ser revisadas.';
-    else resumo = 'as opiniões estão divididas, indicando um serviço regular, mas com bastante espaço para melhorias no atendimento e infraestrutura.';
+
+    // Fallback: se não tiver nenhum comentário no mockData correspondente a este exato ponto de filtro,
+    // utilizar os comentários "estáticos" renderizados na visualização do dashboard.
+    if (filteredReviews.length === 0 && fallbackReviews && fallbackReviews.length > 0) {
+        filteredReviews = fallbackReviews;
+    }
+
     const terminalName = section === 'terminals' ? selected.name : selected.terminal;
     const serviceName = section === 'services' ? selected.name : 'operações gerais';
-    return `O terminal **${terminalName}**, na área de **${serviceName}**, obteve um total de **${total} avaliações** recentes. Destas, foram registrados **${elogios} elogios** e **${criticas} críticas**. A nota média alcançada foi de **${avgScore}/10**. Em resumo, a análise dos comentários indica que ${resumo}`;
+
+    const total = filteredReviews.length;
+    let avaliacoes = 0, feedbacks = 0, elogios = 0, criticas = 0;
+
+    filteredReviews.forEach((r: any) => {
+        const type = (r.type || 'Avaliação').toLowerCase();
+        let isRatingBased = false;
+        if (r.rating !== undefined) {
+            isRatingBased = true;
+            if (r.rating >= 8) elogios++;
+            else if (r.rating <= 6) criticas++;
+            else avaliacoes++;
+        }
+
+        if (!isRatingBased) {
+            if (type.includes('avaliação') || type.includes('avaliacao')) avaliacoes++;
+            else if (type.includes('feedback')) feedbacks++;
+            else if (type.includes('elogio')) elogios++;
+            else if (type.includes('crítica') || type.includes('critica')) criticas++;
+            else feedbacks++;
+        }
+    });
+
+    if (total === 0) {
+        return `O terminal **${terminalName}** na área de **${serviceName}** não obteve comentários diretos associados ao serviço no período analisado. No entanto, o volume de requisições foi de ${selected.requests}, e seu tempo de resposta médio está em ${selected.avgResponseTime}, configurando uma situação atual de status "${selected.status}".`;
+    }
+
+    let precisaMelhorar = "processos mecânicos e fluidez da equipe";
+    let sugestoes = "refinamento na comunicação";
+
+    const criticalComments = filteredReviews.filter((r: any) =>
+        (r.type && r.type.toLowerCase().includes('crítica')) ||
+        (r.rating && r.rating <= 6)
+    );
+
+    if (criticalComments.length > 0) {
+        const firstCritique = criticalComments[0].text || criticalComments[0].comment || "";
+        if (firstCritique.length > 5) {
+            precisaMelhorar = firstCritique.replace(/[.;,]/g, '').toLowerCase();
+        }
+    }
+
+    let text = `O relatório descritivo do terminal **${terminalName}**, atuando especificamente na área de **${serviceName}**, indica que houve um registro total de **${total} interações** e feedbacks textuais providos pelo público nesse ciclo de análise. `;
+    text += `De acordo com os dados capturados durante as operações e consolidados no painel de acompanhamento, a análise de sentimento da plataforma computou ${elogios} ressalvas de caráter altamente positivo e elogios expressos à equipe técnica e à estrutura. Em contraponto, foram contabilizados ${criticas} apontamentos críticos visando correções imediatas de rota, além de ${avaliacoes} menções neutras regulares avaliativas e ${feedbacks} opiniões em formato de feedback que compõem o quadro geral de satisfação do usuário diário.\n\n`;
+
+    if (criticas > 0) {
+        text += `Observando a dor principal dos usuários por meio do mapeamento detalhado dos relatos documentados, as reclamações apontam de forma persistente que a operação precisa ser revista e aprimorada, especialmente no cenário de **"${precisaMelhorar}"**. `;
+        text += `Este fator tem gerado atritos operacionais e eventuais insatisfações que impactam diretamente a nota global do serviço.\n\n`;
+        text += `Portanto, como principal diretriz tática e de contingência sugerida pelo relatório automatizado, recomenda-se à gestão o desenvolvimento de protocolos de resposta rápida para otimizar esse desvio. Adoções tecnológicas ou mesmo treinamentos focados podem mitigar gargalos atuais da equipe e, se possível, deve-se investir prioritariamente num ${sugestoes} para estabelecer um alinhamento mais efetivo de expectativas na execução do serviço prestado. `;
+        if (elogios > 0) {
+            text += `Cumpre ressaltar que, apesar das ressalvas e pontos de atenção ora colocados em pauta, aspectos intrínsecos ao cumprimento rigoroso de prazos, urbanidade no trato e desempenho sistemático intermitentemente foram louvados de forma veemente, o que reforça o status positivo e confiável da infraestrutura portuária na base de atendimento. A qualificação de toda a equipe continua sendo um patrimônio essencial desta planta logística.`;
+        }
+    } else {
+        text += `Ao longo de todo o período referenciado neste recorte de tempo, o panorama global aferido pelos algoritmos analíticos tem se demonstrado de imensa excelência, enaltecendo positivamente o funcionamento regular, a organização, e a prontidão da operação, que se mantém rodando em níveis altíssimos de desempenho e incontestável dedicação por parte da coordenação do terminal.\n\n`;
+        text += `Toda a amostragem coletada evidenciou um nível de satisfação muito elevado por parte dos clientes e trabalhadores locais, que demonstram grande sucesso, fluidez e consistência na entrega dos processos avaliados, com pouquíssimo ou nenhum índice de atrito na jornada da frota pelo terminal. A recomendação da plataforma é manter os protocolos rigorosos de fiscalização e qualidade que já estão sendo empregados com pleno êxito, garantindo que o prestígio corporativo do serviço permaneça no topo histórico de avaliações.`;
+    }
+
+    return text;
 }
 
 export function ReportsContent({ data, role }: { data: any; role: Role }) {
@@ -75,21 +126,55 @@ export function ReportsContent({ data, role }: { data: any; role: Role }) {
         if (!reportTerminal || !reportService) { alert('Selecione um terminal e um serviço para gerar o relatório.'); return; }
         const { recentReviews = [] } = data || {};
         const filteredReviews = recentReviews.filter((r: any) => r.terminal === reportTerminal && r.service === reportService);
+
         const total = filteredReviews.length;
-        let elogios = 0, criticas = 0, sumScore = 0, countRating = 0;
+        let avaliacoes = 0, feedbacks = 0, elogios = 0, criticas = 0;
+
         filteredReviews.forEach((r: any) => {
-            if (r.type === 'Elogio' || (r.rating && r.rating >= 8)) elogios++;
-            else if (r.type === 'Crítica' || (r.rating && r.rating <= 5)) criticas++;
-            if (r.rating !== undefined && r.rating !== null) { sumScore += Number(r.rating); countRating++; }
+            const type = (r.type || 'Avaliação').toLowerCase();
+            if (type.includes('avaliação') || type.includes('avaliacao')) avaliacoes++;
+            else if (type.includes('feedback')) feedbacks++;
+            else if (type.includes('elogio')) elogios++;
+            else if (type.includes('crítica') || type.includes('critica')) criticas++;
+            else {
+                if (r.rating >= 8) elogios++;
+                else if (r.rating <= 5) criticas++;
+                else feedbacks++;
+            }
         });
-        const avgScore = countRating > 0 ? (sumScore / countRating).toFixed(1) : 'N/A';
-        let resumo = '';
-        if (total === 0) resumo = 'não há comentários suficientes para uma análise detalhada deste período.';
-        else if (elogios >= criticas && elogios > 0) resumo = 'a maioria dos usuários está satisfeita com a agilidade e o profissionalismo na operação, destacando o bom desempenho da equipe.';
-        else if (criticas > elogios) resumo = 'existem pontos de atenção urgentes, especialmente com reclamações de lentidão e falhas no fluxo que precisam ser revisadas.';
-        else resumo = 'as opiniões estão divididas, indicando um serviço regular, mas com bastante espaço para melhorias no atendimento e infraestrutura.';
-        const monthText = reportMonth ? ` no mês de **${reportMonth}**` : '';
-        setGeneratedReportText(`O terminal **${reportTerminal}**, na área de **${reportService}**, obteve um total de **${total} avaliações** recentes${monthText}. Destas, foram registrados **${elogios} elogios** e **${criticas} críticas**. A nota média alcançada foi de **${avgScore}/10**. Em resumo, a análise dos comentários indica que ${resumo}`);
+
+        let precisaMelhorar = "infraestrutura e atendimento";
+        const criticalComments = filteredReviews.filter((r: any) =>
+            (r.type && r.type.toLowerCase().includes('crítica')) ||
+            (r.rating && r.rating <= 5)
+        );
+
+        if (criticalComments.length > 0) {
+            const firstCritique = criticalComments[0].comment || "";
+            if (firstCritique.length > 5) {
+                precisaMelhorar = firstCritique.replace(/[.;,]/g, '').toLowerCase();
+            }
+        }
+
+        const monthText = reportMonth ? ` no mês de **${reportMonth}**` : 'no período geral';
+
+        if (total === 0) {
+            setGeneratedReportText(`A consolidação dos dados assinala que o terminal **${reportTerminal}**, na prestação da área de **${reportService}**, não registrou novos comentários textuais associados ${monthText}. A avaliação atual dependerá assim de métricas puramente quantitativas de performance como as demonstradas na tela do sistema.`);
+            return;
+        }
+
+        let text = `O relatório executivo e consolidado referente à movimentação do terminal **${reportTerminal}**, estritamente no departamento de **${reportService}**, confirma um acúmulo representativo de **${total} depoimentos avaliativos** gerados organicamente pelos usuários nas atividades ${monthText}.\n\n`;
+        text += `Mergulhando de maneira minuciosa nos dados qualitativos que constroem este perfil, a inteligência operacional aferiu precisamente **${elogios} manifestações espontâneas de elogio** realçando o prestativo serviço dos operadores em campo, juntamente a ${avaliacoes} validações padrão de atendimento de métrica mediana. Sob o viés crítico e de identificação de falhas na prestação, a base reportou **${criticas} contestações incisivas e reclamações formais**, acompanhadas por ${feedbacks} sugestões construtivas menores oriundas da ponta funcional da operação logística.\n\n`;
+
+        if (criticas > 0 || feedbacks > 0) {
+            text += `🚩 **Pontos Críticos e Ocorrências:** Sobrevendo o leque principal de problemas relatados sob um prisma cirúrgico de gestão de crise, extrai-se consistentemente que a disfunção matricial afeta diretamente os usuários com a percepção reiterada de que as medidas locais carecem de suporte na mitigação do seguinte gargalo: **"${precisaMelhorar}"**.\n\n`;
+            text += `🚀 **Direcionamento Tático:** Tendo em vista o teor contínuo dos apontamentos sub-ótimos mapeados, desponta como instrução normativa de caráter primário para os executivos de performance desta unidade a urgência em reformatar a frente operacional debilitada, instalando soluções dinâmicas de triagem, capacitação sistêmica urgente e uma supervisão in loco rigorosa em conjunto à terceirizada (quando aplicável) visando mitigar por completo essas quebras de fluência no cotidiano do modal de transporte.`;
+        } else {
+            text += `✨ **Indicativos de Conformidade Operacional:** Nas amostras capturadas e parametrizadas integralmente pelo painel neste intervalo estipulado, repousa confortavelmente o fato excepcional e louvável da absoluta ausência de notas vexatórias ou críticas crônicas aos métodos de manobra e logística do núcleo administrativo em tela.\n\n`;
+            text += `Pelo desdobrar do cenário logístico e do crivo imposto, certifica-se com louvor que todo o arcabouço processual funciona de forma ágil, orgânica e impecavelmente bem engrenada, de modo que os testemunhos em foco traçam, substancial e unicamente, aplausos notórios às rotinas virtuosas em andamento.`;
+        }
+
+        setGeneratedReportText(text);
     };
 
     const filtered = section === 'terminals'
@@ -126,7 +211,15 @@ export function ReportsContent({ data, role }: { data: any; role: Role }) {
         const s = selected as any;
         const mockTrend = [80, 95, 88, 102, 120, 110, 98];
         const days = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
-        const autoReportText = buildAutoReport(data, s, section);
+
+        // Comentarios estaticos renderizados na visualizacao
+        const viewComments = [
+            { user: 'Carlos Silva', rating: 10, text: 'Excelente desempenho. Operação dentro do prazo.' },
+            { user: 'João Pereira', rating: 6, text: 'Atraso no processamento. Equipe reativa, mas lenta.' },
+            { user: 'Ana Souza', rating: 8, text: 'Serviço bem organizado. Poderia melhorar comunicação.' },
+        ];
+
+        const autoReportText = buildAutoReport(data, s, section, viewComments);
         return (
             <div className="space-y-6">
                 <div className="flex items-center gap-3">
@@ -143,7 +236,7 @@ export function ReportsContent({ data, role }: { data: any; role: Role }) {
                         <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusBadge(s.status)}`}>{s.status}</span>
                     </div>
                     <div className="mb-8 p-5 bg-blue-50/50 border border-blue-100 rounded-xl relative">
-                        <h3 className="text-sm font-bold text-blue-800 mb-3 absolute top-[-10px] bg-blue-100 px-3 py-0.5 rounded-full inline-block">✨ Síntese Automática</h3>
+                        <h3 className="text-sm font-bold text-blue-800 mb-3 absolute top-[-10px] bg-blue-100 px-3 py-0.5 rounded-full inline-block">✨ Síntese Automática Analítica</h3>
                         <div className="text-gray-700 text-sm leading-relaxed whitespace-pre-line pt-2"
                             dangerouslySetInnerHTML={{ __html: autoReportText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }}
                         />
@@ -155,22 +248,6 @@ export function ReportsContent({ data, role }: { data: any; role: Role }) {
                                 <p className="text-xs text-gray-500 mt-1">{k.label}</p>
                             </div>
                         ))}
-                    </div>
-                    <div className="mb-8">
-                        <h2 className="text-base font-semibold text-gray-700 mb-4">Volume de Requisições — Últimos 7 dias</h2>
-                        <div className="relative h-32 flex items-end gap-2">
-                            {mockTrend.map((val, i) => {
-                                const max = Math.max(...mockTrend);
-                                const h = (val / max) * 100;
-                                return (
-                                    <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                                        <span className="text-xs text-gray-500">{val}</span>
-                                        <div className="w-full bg-blue-500 rounded-t-md" style={{ height: `${h}%` }} />
-                                        <span className="text-xs text-gray-400">{days[i]}</span>
-                                    </div>
-                                );
-                            })}
-                        </div>
                     </div>
                     <div>
                         <h2 className="text-base font-semibold text-gray-700 mb-4">Comentários Recentes</h2>
