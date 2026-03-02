@@ -69,6 +69,24 @@ export const recentReviews = [
         comment: '.',
         time: 'agora mesmo',
     },
+    {
+        id: '5',
+        user: 'Ana Pereira',
+        terminal: 'Ecoporto',
+        rating: 4,
+        comment: 'Problemas de comunicação com a equipe de apoio, atrasos frequentes.',
+        time: '1h atrás',
+        type: 'Crítica',
+    },
+    {
+        id: '6',
+        user: 'Rafael Souza',
+        terminal: 'DP World',
+        rating: 3,
+        comment: 'Equipamento de carga com falhas recorrentes, precisa de manutenção urgente.',
+        time: '30min atrás',
+        type: 'Crítica',
+    },
 ];
 
 export const portServicesData = [
