@@ -15,7 +15,7 @@ export function TerminalAvaliacoesContent() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-2xl font-bold text-gray-800">🏗️ Avaliação de Terminal</h1>
+                <h1 className="text-2xl font-bold text-gray-800">Avaliação de Terminal</h1>
                 <p className="text-gray-500 text-sm mt-1">Média das notas recebidas por cada terminal do Porto de Santos</p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">

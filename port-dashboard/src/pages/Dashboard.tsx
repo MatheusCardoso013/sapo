@@ -48,7 +48,7 @@ export function DashboardContent({ data }: { data: any }) {
 
             <div className="bg-gradient-to-br from-blue-700 via-blue-800 to-blue-900 rounded-3xl p-8 lg:p-10 text-white shadow-lg relative overflow-hidden flex flex-col justify-center min-h-[180px]">
                 <div className="relative z-10 max-w-2xl">
-                    <h1 className="text-3xl lg:text-4xl font-bold mb-3">Bem-vindo ao SAPO 👋</h1>
+                    <h1 className="text-3xl lg:text-4xl font-bold mb-3">Bem-vindo ao SAPO</h1>
                     <p className="text-blue-100 text-lg leading-relaxed">
                         Sistema de Avaliação Portuária. Acompanhe o ranking de terminais e o sentimento real da operação
                         através das avaliações e críticas mais recentes.
@@ -84,7 +84,7 @@ export function DashboardContent({ data }: { data: any }) {
 
                 <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col h-[500px]">
                     <div className="flex justify-between items-center mb-6">
-                        <h2 className="font-semibold text-gray-800 text-lg flex items-center gap-2">⭐ Avaliações Recentes</h2>
+                        <h2 className="font-semibold text-gray-800 text-lg">Avaliações Recentes</h2>
                     </div>
                     <div className="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar">
                         {outrasAvaliacoes.map((review: any) => (
@@ -99,7 +99,7 @@ export function DashboardContent({ data }: { data: any }) {
 
                 <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col h-[500px]">
                     <div className="flex justify-between items-center mb-6">
-                        <h2 className="font-semibold text-gray-800 text-lg flex items-center gap-2">⚠️ Críticas Recentes</h2>
+                        <h2 className="font-semibold text-gray-800 text-lg">Críticas Recentes</h2>
                     </div>
                     <div className="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar">
                         {criticas.map((review: any) => (

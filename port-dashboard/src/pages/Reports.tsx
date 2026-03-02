@@ -282,7 +282,7 @@ export function ReportsContent({ data, role }: { data: any; role: Role }) {
                 {(['services', 'terminals'] as const).map(s => (
                     <button key={s} onClick={() => { setSection(s); clearFilters(); }}
                         className={`px-5 py-2 rounded-lg text-sm font-medium transition-all border ${section === s ? 'bg-blue-600 text-white border-blue-600 shadow' : 'bg-white text-gray-600 border-gray-200 hover:border-blue-400'}`}>
-                        {s === 'services' ? '🔧 Serviços' : '🏗️ Terminais'}
+                        {s === 'services' ? 'Serviços' : 'Terminais'}
                     </button>
                 ))}
             </div>

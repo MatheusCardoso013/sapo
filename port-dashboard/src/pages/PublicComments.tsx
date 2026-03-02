@@ -95,10 +95,10 @@ export function PublicCommentsContent() {
                             </div>
                             <p className="text-sm text-gray-600 mb-4 leading-relaxed">"{c.comment}"</p>
                             <div className="flex flex-wrap gap-2 text-xs text-gray-500 border-t border-gray-50 pt-3">
-                                <span className="bg-gray-100 px-2 py-1 rounded-md">🏗️ {c.terminal}</span>
-                                <span className="bg-gray-100 px-2 py-1 rounded-md">🔧 {c.service}</span>
+                                <span className="bg-gray-100 px-2 py-1 rounded-md">{c.terminal}</span>
+                                <span className="bg-gray-100 px-2 py-1 rounded-md">{c.service}</span>
                                 {c.rating !== null && (
-                                    <span className="bg-yellow-50 text-yellow-700 px-2 py-1 rounded-md font-semibold ml-auto">⭐ {c.rating}/10</span>
+                                    <span className="bg-yellow-50 text-yellow-700 px-2 py-1 rounded-md font-semibold ml-auto">Nota: {c.rating}/10</span>
                                 )}
                             </div>
                         </div>

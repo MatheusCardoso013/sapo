@@ -46,7 +46,7 @@ function App() {
     return (
       <div className="min-h-screen bg-port-gray flex items-center justify-center font-sans">
         <div className="text-xl font-medium text-gray-600 flex items-center gap-3">
-          <span className="text-3xl animate-bounce">🐸</span> Carregando banco de dados local...
+          Carregando...
         </div>
       </div>
     );
@@ -59,7 +59,7 @@ function App() {
     <div className="h-screen bg-port-gray flex font-sans overflow-hidden">
       <aside className={`bg-port-blue text-white transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-20'} flex flex-col h-full z-20 flex-shrink-0`}>
         <div className="p-4 flex items-center justify-between h-16 border-b border-blue-800">
-          {sidebarOpen && <span className="font-bold text-lg truncate flex items-center gap-2"><span className="text-2xl">🐸</span> Sapo</span>}
+          {sidebarOpen && <span className="font-bold text-lg truncate">Sapo</span>}
           <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-1 hover:bg-blue-800 rounded">
             <Menu size={20} />
           </button>

@@ -12,7 +12,7 @@ export function TeamContent() {
         <div className="space-y-6">
             <div className="flex justify-between items-end">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-800">👥 Equipe</h1>
+                    <h1 className="text-2xl font-bold text-gray-800">Equipe</h1>
                     <p className="text-gray-500 text-sm mt-1">Membros da equipe interna do SAPO</p>
                 </div>
                 <button className="px-4 py-2 bg-port-accent hover:bg-blue-600 text-white rounded-lg text-sm font-medium transition-colors shadow-sm">

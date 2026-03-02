@@ -35,7 +35,7 @@ export function LoginScreen({ onLogin, onNavigate }: {
     return (
         <div className="min-h-screen bg-port-gray flex items-center justify-center font-sans p-4">
             <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md border border-gray-100">
-                <div className="flex justify-center mb-6"><span className="text-6xl">🐸</span></div>
+                <div className="flex justify-center mb-6"><span className="text-3xl font-bold text-blue-600">SAPO</span></div>
                 <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">Bem-vindo ao Sapo</h2>
                 <p className="text-center text-gray-500 mb-8">Faça login para acessar o painel</p>
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -60,7 +60,7 @@ export function LoginScreen({ onLogin, onNavigate }: {
                         <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{error}</p>
                     )}
                     <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg text-xs text-blue-700">
-                        💡 Admin: <strong>admin@sapo.com</strong> / <strong>@123123</strong> &nbsp;|&nbsp; Cliente: <strong>cliente@sapo.com</strong> / <strong>@123123</strong>
+                        Admin: <strong>admin@sapo.com</strong> / <strong>@123123</strong> &nbsp;|&nbsp; Cliente: <strong>cliente@sapo.com</strong> / <strong>@123123</strong>
                     </div>
                     <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition-colors mt-2">
                         Entrar
@@ -88,7 +88,7 @@ export function RegisterScreen({ onLogin, onNavigate }: {
     return (
         <div className="min-h-screen bg-port-gray flex items-center justify-center font-sans p-4">
             <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md border border-gray-100">
-                <div className="flex justify-center mb-6"><span className="text-6xl">🐸</span></div>
+                <div className="flex justify-center mb-6"><span className="text-3xl font-bold text-blue-600">SAPO</span></div>
                 <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">Criar Conta</h2>
                 <p className="text-center text-gray-500 mb-8">Junte-se ao Sapo hoje mesmo</p>
                 <form onSubmit={handleSubmit} className="space-y-4">

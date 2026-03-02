@@ -14,7 +14,7 @@ export function UsersContent() {
         <div className="space-y-6">
             <div className="flex justify-between items-end">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-800">🧑‍💻 Usuários Cadastrados</h1>
+                    <h1 className="text-2xl font-bold text-gray-800">Usuários Cadastrados</h1>
                     <p className="text-gray-500 text-sm mt-1">Todos os clientes registrados na plataforma</p>
                 </div>
                 <span className="text-sm text-gray-500 bg-white border border-gray-200 px-3 py-1.5 rounded-lg shadow-sm">

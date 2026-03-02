@@ -22,8 +22,8 @@ export function RatingCard({ name, avg, total, elogios, criticas }: {
             <div className="flex justify-between text-xs text-gray-500">
                 <span>{total} avaliações</span>
                 <span className="flex gap-3">
-                    <span className="text-green-600">👍 {elogios}</span>
-                    <span className="text-red-500">👎 {criticas}</span>
+                    <span className="text-green-600">Elogios: {elogios}</span>
+                    <span className="text-red-500">Críticas: {criticas}</span>
                 </span>
             </div>
         </div>

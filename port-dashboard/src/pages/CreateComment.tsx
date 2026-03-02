@@ -3,12 +3,12 @@ import { Star, PlusCircle } from 'lucide-react';
 
 const terminalsList = ['Santos Brasil', 'DP World Santos', 'Brasil Terminal Portuário (BTP)', 'Ecoporto Santos', 'Rumo Logística', 'Terminal STS10', 'Copersucar', 'Cutrale', 'Outros'];
 const serviceGroups: Record<string, string[]> = {
-    '⛵ Apoio à Navegação': ['Praticagem (pilotagem)', 'Rebocadores (towage)', 'Atracação / acostagem', 'Mooring (amarração)', 'Bunkering (abastecimento de combustível)'],
-    '🚢 Operacionais Diretos': ['Carga e descarga de mercadorias', 'Manuseio de containers', 'Operações de granel sólido', 'Operações de granel líquido', 'Ro-ro (roll-on/roll-off)'],
-    '📦 Armazenagem & Logística': ['Armazenagem alfandegada', 'Logística integrada', 'Cross-docking'],
-    '📑 Administrativos': ['Inspeção sanitária', 'Desembaraço aduaneiro / alfândega', 'Documentação portuária'],
-    '🛠️ Infraestrutura': ['Manutenção de estrutura portuária'],
-    '📊 Outros Serviços': ['Monitoramento de navios', 'Outros'],
+    'Apoio à Navegação': ['Praticagem (pilotagem)', 'Rebocadores (towage)', 'Atracação / acostagem', 'Mooring (amarração)', 'Bunkering (abastecimento de combustível)'],
+    'Operacionais Diretos': ['Carga e descarga de mercadorias', 'Manuseio de containers', 'Operações de granel sólido', 'Operações de granel líquido', 'Ro-ro (roll-on/roll-off)'],
+    'Armazenagem & Logística': ['Armazenagem alfandegada', 'Logística integrada', 'Cross-docking'],
+    'Administrativos': ['Inspeção sanitária', 'Desembaraço aduaneiro / alfândega', 'Documentação portuária'],
+    'Infraestrutura': ['Manutenção de estrutura portuária'],
+    'Outros Serviços': ['Monitoramento de navios', 'Outros'],
 };
 const types = ['Avaliação', 'Elogio', 'Crítica', 'Sugestão', 'Feedback'];
 const needsRating = (t: string) => t !== 'Crítica' && t !== 'Sugestão';
@@ -38,7 +38,7 @@ export function CreateCommentContent() {
     if (submitted) {
         return (
             <div className="flex flex-col items-center justify-center h-full text-center py-24">
-                <span className="text-7xl mb-6">🐸</span>
+                <span className="text-3xl font-bold text-blue-600 mb-6">SAPO</span>
                 <h2 className="text-2xl font-bold text-gray-800 mb-2">Registro Enviado!</h2>
                 <p className="text-gray-500 mb-8">Obrigado por compartilhar sua percepção.</p>
                 <button onClick={handleReset} className="px-6 py-2.5 bg-port-accent hover:bg-blue-600 text-white rounded-lg font-medium transition-colors">Novo Registro</button>
@@ -110,7 +110,7 @@ export function CreateCommentContent() {
                 </div>
                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200">
                     <div>
-                        <p className="text-sm font-semibold text-gray-700">{isPublic ? '🌐 Comentário Público' : '🔒 Comentário Privado'}</p>
+                        <p className="text-sm font-semibold text-gray-700">{isPublic ? 'Comentário Público' : 'Comentário Privado'}</p>
                         <p className="text-xs text-gray-500 mt-0.5">{isPublic ? 'Visível para todos os usuários do sistema' : 'Visível apenas para administradores'}</p>
                     </div>
                     <button type="button" onClick={() => setIsPublic(p => !p)}

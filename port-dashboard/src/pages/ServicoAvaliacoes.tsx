@@ -42,7 +42,7 @@ export function ServicoAvaliacoesContent() {
         <div className="space-y-6">
             <div className="flex justify-between items-end">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-800">🔧 Avaliação de Serviços Portuários</h1>
+                    <h1 className="text-2xl font-bold text-gray-800">Avaliação de Serviços Portuários</h1>
                     <p className="text-gray-500 text-sm mt-1">Média das notas recebidas por serviço</p>
                 </div>
                 <span className="text-sm text-gray-500 bg-white border border-gray-200 px-3 py-1.5 rounded-lg shadow-sm">
@@ -96,8 +96,8 @@ export function ServicoAvaliacoesContent() {
                             <div className="flex justify-between text-xs text-gray-500">
                                 <span>{s.total} avaliações</span>
                                 <span className="flex gap-3">
-                                    <span className="text-green-600">👍 {s.elogios}</span>
-                                    <span className="text-red-500">👎 {s.criticas}</span>
+                                    <span className="text-green-600">Elogios: {s.elogios}</span>
+                                    <span className="text-red-500">Críticas: {s.criticas}</span>
                                 </span>
                             </div>
                         </div>
