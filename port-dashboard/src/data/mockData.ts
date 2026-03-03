@@ -1,5 +1,5 @@
-// Dados mock embutidos diretamente no código para funcionar sem servidor backend.
-// Substitui o json-server (localhost:3001) para deploy na Vercel.
+
+
 
 export const waitTimeData = [
     { id: '1', name: 'Seg', tempo: 12 },
