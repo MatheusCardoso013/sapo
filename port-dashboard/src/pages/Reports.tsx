@@ -38,8 +38,8 @@ function buildAutoReport(data: any, selected: any, section: string, fallbackRevi
         section === 'terminals' ? r.terminal === selected.name : (r.terminal === selected.terminal && r.service === selected.name)
     );
 
-    
-    
+
+
     if (filteredReviews.length === 0 && fallbackReviews && fallbackReviews.length > 0) {
         filteredReviews = fallbackReviews;
     }
@@ -209,10 +209,10 @@ export function ReportsContent({ data, role }: { data: any; role: Role }) {
 
     if (selected) {
         const s = selected as any;
-        const mockTrend = [80, 95, 88, 102, 120, 110, 98];
-        const days = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
 
-        
+
+
+
         const viewComments = [
             { user: 'Carlos Silva', rating: 10, text: 'Excelente desempenho. Operação dentro do prazo.' },
             { user: 'João Pereira', rating: 6, text: 'Atraso no processamento. Equipe reativa, mas lenta.' },
