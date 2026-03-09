@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, Plus } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 interface Terminal {
     id: number;
@@ -13,35 +14,89 @@ interface Terminal {
     createdAt?: string;
 }
 
-const getTerminals = (): Terminal[] => {
-    const stored = localStorage.getItem('port_terminals');
-    return stored ? JSON.parse(stored) : [];
+const getTerminals = async (): Promise<Terminal[]> => {
+    try {
+        const { data, error } = await supabase
+            .from('terminals')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        return (data || []).map((t: any) => ({
+            id: t.id,
+            name: t.name,
+            type: t.type,
+            docks: t.docks,
+            status: t.status,
+            capacity: `${t.capacity}%`,
+            efficiency: t.efficiency,
+            throughput: t.throughput,
+            createdAt: t.created_at
+        }));
+    } catch (error) {
+        console.error('Erro ao buscar terminais:', error);
+        return [];
+    }
 };
 
-const saveTerminal = (terminal: Omit<Terminal, 'id' | 'createdAt'>) => {
-    const terminals = getTerminals();
-    const newTerminal: Terminal = {
-        ...terminal,
-        id: Date.now(),
-        createdAt: new Date().toISOString()
-    };
-    terminals.push(newTerminal);
-    localStorage.setItem('port_terminals', JSON.stringify(terminals));
-    return newTerminal;
+const saveTerminal = async (terminal: Omit<Terminal, 'id' | 'createdAt'>) => {
+    try {
+        const { data, error } = await supabase
+            .from('terminals')
+            .insert([{
+                name: terminal.name,
+                type: terminal.type,
+                docks: terminal.docks,
+                status: terminal.status,
+                capacity: parseInt(terminal.capacity),
+                efficiency: terminal.efficiency,
+                throughput: terminal.throughput,
+                created_at: new Date().toISOString()
+            }])
+            .select();
+
+        if (error) throw error;
+
+        const newTerminal = data?.[0];
+        return {
+            id: newTerminal.id,
+            name: newTerminal.name,
+            type: newTerminal.type,
+            docks: newTerminal.docks,
+            status: newTerminal.status,
+            capacity: `${newTerminal.capacity}%`,
+            efficiency: newTerminal.efficiency,
+            throughput: newTerminal.throughput,
+            createdAt: newTerminal.created_at
+        };
+    } catch (error) {
+        console.error('Erro ao salvar terminal:', error);
+        throw error;
+    }
 };
 
-const deleteTerminal = (id: number) => {
-    const terminals = getTerminals();
-    const filtered = terminals.filter(t => t.id !== id);
-    localStorage.setItem('port_terminals', JSON.stringify(filtered));
+const deleteTerminal = async (id: number) => {
+    try {
+        const { error } = await supabase
+            .from('terminals')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+    } catch (error) {
+        console.error('Erro ao deletar terminal:', error);
+        throw error;
+    }
 };
 
 export function TerminalsContent({ userEmail }: { userEmail: string }) {
     const [showModal, setShowModal] = useState(false);
     const [customTerminals, setCustomTerminals] = useState<Terminal[]>([]);
-    
+    const [loading, setLoading] = useState(true);
+
     const isAdmin = userEmail === 'admin@sapo.com';
-    
+
     const defaultTerminals: Terminal[] = [
         { id: 1, name: "Santos Brasil", type: "Contêineres", docks: 3, status: "Operando", capacity: "95%", efficiency: 92, throughput: 150 },
         { id: 2, name: "DP World Santos", type: "Contêineres", docks: 4, status: "Manutenção Parcial", capacity: "78%", efficiency: 78, throughput: 110 },
@@ -52,19 +107,47 @@ export function TerminalsContent({ userEmail }: { userEmail: string }) {
     const terminals = [...defaultTerminals, ...customTerminals];
 
     useEffect(() => {
-        setCustomTerminals(getTerminals());
+        loadTerminals();
     }, []);
 
-    const handleAddTerminal = (terminal: Omit<Terminal, 'id' | 'createdAt'>) => {
-        const newTerminal = saveTerminal(terminal);
-        setCustomTerminals(prev => [...prev, newTerminal]);
-        setShowModal(false);
+    const loadTerminals = async () => {
+        setLoading(true);
+        try {
+            const data = await getTerminals();
+            setCustomTerminals(data);
+        } catch (error) {
+            console.error('Erro ao carregar terminais:', error);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleDelete = (id: number) => {
-        deleteTerminal(id);
-        setCustomTerminals(prev => prev.filter(t => t.id !== id));
+    const handleAddTerminal = async (terminal: Omit<Terminal, 'id' | 'createdAt'>) => {
+        try {
+            const newTerminal = await saveTerminal(terminal);
+            setCustomTerminals(prev => [...prev, newTerminal]);
+            setShowModal(false);
+        } catch (error) {
+            alert('Erro ao adicionar terminal. Tente novamente.');
+        }
     };
+
+    const handleDelete = async (id: number) => {
+        try {
+            await deleteTerminal(id);
+            setCustomTerminals(prev => prev.filter(t => t.id !== id));
+        } catch (error) {
+            alert('Erro ao remover terminal. Tente novamente.');
+        }
+    };
+
+    if (loading && customTerminals.length === 0) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="text-gray-600">Carregando terminais...</div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">
@@ -74,7 +157,7 @@ export function TerminalsContent({ userEmail }: { userEmail: string }) {
                     <p className="text-gray-500 text-sm mt-1">Visão geral da operação e eficiência de todos os terminais</p>
                 </div>
                 {isAdmin && (
-                    <button 
+                    <button
                         onClick={() => setShowModal(true)}
                         className="px-4 py-2 bg-port-accent hover:bg-blue-600 text-white rounded-lg shadow-sm text-sm font-medium transition-colors flex items-center gap-2"
                     >
@@ -121,16 +204,16 @@ export function TerminalsContent({ userEmail }: { userEmail: string }) {
                             <div className="w-full bg-gray-100 rounded-full h-1.5 mb-5 overflow-hidden">
                                 <div className={`h-1.5 rounded-full ${parseInt(terminal.capacity) > 90 ? 'bg-red-500' : parseInt(terminal.capacity) > 75 ? 'bg-yellow-500' : 'bg-green-500'}`} style={{ width: terminal.capacity }}></div>
                             </div>
-                            
+
                             {isAdmin && terminal.createdAt && (
-                                <button 
+                                <button
                                     onClick={() => handleDelete(terminal.id)}
                                     className="w-full py-2 text-sm text-red-600 font-medium hover:bg-red-50 rounded-lg transition-colors border border-transparent hover:border-red-100 mb-2"
                                 >
                                     Remover Terminal
                                 </button>
                             )}
-                            
+
                             <button className="w-full py-2 text-sm text-blue-600 font-medium hover:bg-blue-50 rounded-lg transition-colors border border-transparent hover:border-blue-100">
                                 Ver detalhes operacionais
                             </button>
@@ -144,8 +227,8 @@ export function TerminalsContent({ userEmail }: { userEmail: string }) {
     );
 }
 
-function AddTerminalModal({ onClose, onAdd }: { 
-    onClose: () => void; 
+function AddTerminalModal({ onClose, onAdd }: {
+    onClose: () => void;
     onAdd: (terminal: Omit<Terminal, 'id' | 'createdAt'>) => void;
 }) {
     const [formData, setFormData] = useState({
