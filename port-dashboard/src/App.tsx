@@ -22,10 +22,12 @@ function App() {
   const [view, setView] = useState<View>('login');
   const [role, setRole] = useState<Role>('cliente');
   const [userName, setUserName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
   const { data, loading } = useAppData();
-  const handleLogin = ({ role: r, userName: n }: { view: 'app'; role: Role; userName: string }) => {
+  const handleLogin = ({ role: r, userName: n, userEmail: e }: { view: 'app'; role: Role; userName: string; userEmail: string }) => {
     setRole(r);
     setUserName(n);
+    setUserEmail(e);
     setActiveTab('dashboard');
     setView('app');
   };
@@ -105,7 +107,7 @@ function App() {
         <div className="flex-1 overflow-y-auto p-6 bg-port-gray relative">
           {activeTab === 'dashboard' && <DashboardContent data={data} />}
           {activeTab === 'reports' && <ReportsContent data={data} role={role} />}
-          {activeTab === 'terminals' && <TerminalsContent />}
+          {activeTab === 'terminals' && <TerminalsContent userEmail={userEmail} />}
           {activeTab === 'create-comment' && <CreateCommentContent />}
           {activeTab === 'public-comments' && <PublicCommentsContent />}
           {activeTab === 'aval-terminal' && <TerminalAvaliacoesContent />}

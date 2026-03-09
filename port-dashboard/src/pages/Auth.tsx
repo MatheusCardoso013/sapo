@@ -6,6 +6,7 @@ interface AuthResult {
     view: 'app';
     role: Role;
     userName: string;
+    userEmail: string;
 }
 
 interface User {
@@ -56,7 +57,7 @@ export function LoginScreen({ onLogin, onNavigate }: {
         
         const defaultMatch = CREDENTIALS.find(c => c.email === email.trim().toLowerCase() && c.password === password);
         if (defaultMatch) {
-            onLogin({ view: 'app', role: defaultMatch.role, userName: defaultMatch.name });
+            onLogin({ view: 'app', role: defaultMatch.role, userName: defaultMatch.name, userEmail: defaultMatch.email });
             return;
         }
 
@@ -68,7 +69,7 @@ export function LoginScreen({ onLogin, onNavigate }: {
             return;
         }
         
-        onLogin({ view: 'app', role: userMatch.role, userName: userMatch.name });
+        onLogin({ view: 'app', role: userMatch.role, userName: userMatch.name, userEmail: userMatch.email });
     };
 
     return (

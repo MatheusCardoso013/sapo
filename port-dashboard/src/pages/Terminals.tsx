@@ -36,9 +36,11 @@ const deleteTerminal = (id: number) => {
     localStorage.setItem('port_terminals', JSON.stringify(filtered));
 };
 
-export function TerminalsContent() {
+export function TerminalsContent({ userEmail }: { userEmail: string }) {
     const [showModal, setShowModal] = useState(false);
     const [customTerminals, setCustomTerminals] = useState<Terminal[]>([]);
+    
+    const isAdmin = userEmail === 'admin@sapo.com';
     
     const defaultTerminals: Terminal[] = [
         { id: 1, name: "Santos Brasil", type: "Contêineres", docks: 3, status: "Operando", capacity: "95%", efficiency: 92, throughput: 150 },
@@ -78,13 +80,15 @@ export function TerminalsContent() {
                     <h1 className="text-2xl font-bold text-gray-800">Terminais (Porto de Santos)</h1>
                     <p className="text-gray-500 text-sm mt-1">Visão geral da operação e eficiência de todos os terminais</p>
                 </div>
-                <button 
-                    onClick={() => setShowModal(true)}
-                    className="px-4 py-2 bg-port-accent hover:bg-blue-600 text-white rounded-lg shadow-sm text-sm font-medium transition-colors flex items-center gap-2"
-                >
-                    <Plus size={18} />
-                    Cadastrar Terminal
-                </button>
+                {isAdmin && (
+                    <button 
+                        onClick={() => setShowModal(true)}
+                        className="px-4 py-2 bg-port-accent hover:bg-blue-600 text-white rounded-lg shadow-sm text-sm font-medium transition-colors flex items-center gap-2"
+                    >
+                        <Plus size={18} />
+                        Cadastrar Terminal
+                    </button>
+                )}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                 {terminals.map(terminal => (
@@ -125,7 +129,7 @@ export function TerminalsContent() {
                                 <div className={`h-1.5 rounded-full ${parseInt(terminal.capacity) > 90 ? 'bg-red-500' : parseInt(terminal.capacity) > 75 ? 'bg-yellow-500' : 'bg-green-500'}`} style={{ width: terminal.capacity }}></div>
                             </div>
                             
-                            {terminal.createdAt && (
+                            {isAdmin && terminal.createdAt && (
                                 <button 
                                     onClick={() => handleDelete(terminal.id)}
                                     className="w-full py-2 text-sm text-red-600 font-medium hover:bg-red-50 rounded-lg transition-colors border border-transparent hover:border-red-100 mb-2"
