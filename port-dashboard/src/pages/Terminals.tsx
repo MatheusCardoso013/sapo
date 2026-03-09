@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, Plus, TrendingUp, TrendingDown, Anchor } from 'lucide-react';
+import { X, Plus } from 'lucide-react';
 
 interface Terminal {
     id: number;
@@ -65,13 +65,6 @@ export function TerminalsContent({ userEmail }: { userEmail: string }) {
         deleteTerminal(id);
         setCustomTerminals(prev => prev.filter(t => t.id !== id));
     };
-
-    const avgEfficiency = terminals.length > 0 
-        ? (terminals.reduce((sum, t) => sum + t.efficiency, 0) / terminals.length).toFixed(1)
-        : 0;
-    
-    const totalThroughput = terminals.reduce((sum, t) => sum + t.throughput, 0);
-    const operatingTerminals = terminals.filter(t => t.status === 'Operando').length;
 
     return (
         <div className="space-y-6">

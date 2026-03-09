@@ -13,7 +13,7 @@ import { TerminalAvaliacoesContent } from './pages/TerminalAvaliacoes';
 import { ServicoAvaliacoesContent } from './pages/ServicoAvaliacoes';
 import { PublicCommentsContent } from './pages/PublicComments';
 import { CreateCommentContent } from './pages/CreateComment';
-import { LoginScreen, RegisterScreen, type Role } from './pages/Auth';
+import { LoginScreen, RegisterScreen } from './pages/Auth';
 import { TeamContent } from './pages/Team';
 import { UsersContent } from './pages/Users';
 
@@ -37,11 +37,6 @@ function App() {
     }
   }, [user, profile, authLoading]);
 
-  const handleLogin = ({ role: r, userName: n, userEmail: e }: { view: 'app'; role: Role; userName: string; userEmail: string }) => {
-    setActiveTab('dashboard');
-    setView('app');
-  };
-
   const handleLogout = async () => {
     await signOut();
     setView('login');
@@ -57,8 +52,8 @@ function App() {
       </div>
     );
   }
-  if (view === 'login') return <LoginScreen onLogin={handleLogin} onNavigate={() => setView('register')} />;
-  if (view === 'register') return <RegisterScreen onLogin={handleLogin} onNavigate={() => setView('login')} />;
+  if (view === 'login') return <LoginScreen onNavigate={() => setView('register')} />;
+  if (view === 'register') return <RegisterScreen onNavigate={() => setView('login')} />;
 
   if (loading || !data || !profile) {
     return (

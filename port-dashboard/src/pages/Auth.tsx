@@ -3,15 +3,7 @@ import { useAuth } from '../hooks/useAuth';
 
 export type Role = 'superadmin' | 'cliente';
 
-interface AuthResult {
-    view: 'app';
-    role: Role;
-    userName: string;
-    userEmail: string;
-}
-
-export function LoginScreen({ onLogin, onNavigate }: {
-    onLogin: (result: AuthResult) => void;
+export function LoginScreen({ onNavigate }: {
     onNavigate: (view: 'register') => void;
 }) {
     const { signIn } = useAuth();
@@ -201,8 +193,7 @@ export function LoginScreen({ onLogin, onNavigate }: {
     );
 }
 
-export function RegisterScreen({ onLogin, onNavigate }: {
-    onLogin: (result: AuthResult) => void;
+export function RegisterScreen({ onNavigate }: {
     onNavigate: (view: 'login') => void;
 }) {
     const { signUp } = useAuth();
