@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAuth } from '../hooks/useAuth';
 
 export type Role = 'superadmin' | 'cliente';
 
@@ -9,29 +10,11 @@ interface AuthResult {
     userEmail: string;
 }
 
-interface User {
-    email: string;
-    password: string;
-    name: string;
-    area: string;
-    role: Role;
-}
-
-const getUsers = (): User[] => {
-    const users = localStorage.getItem('sapo_users');
-    return users ? JSON.parse(users) : [];
-};
-
-const saveUser = (user: User) => {
-    const users = getUsers();
-    users.push(user);
-    localStorage.setItem('sapo_users', JSON.stringify(users));
-};
-
 export function LoginScreen({ onLogin, onNavigate }: {
     onLogin: (result: AuthResult) => void;
     onNavigate: (view: 'register') => void;
 }) {
+    const { signIn } = useAuth();
     const [darkMode, setDarkMode] = React.useState(() => document.documentElement.classList.contains('dark'));
 
     React.useEffect(() => {
@@ -45,31 +28,26 @@ export function LoginScreen({ onLogin, onNavigate }: {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [error, setError] = React.useState('');
+    const [loading, setLoading] = React.useState(false);
 
-    const CREDENTIALS = [
-        { email: 'admin@sapo.com', password: '@123123', role: 'superadmin' as Role, name: 'Admin Silva' },
-        { email: 'cliente@sapo.com', password: '@123123', role: 'cliente' as Role, name: 'Cliente' },
-    ];
-
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+        setLoading(true);
         
-        const defaultMatch = CREDENTIALS.find(c => c.email === email.trim().toLowerCase() && c.password === password);
-        if (defaultMatch) {
-            onLogin({ view: 'app', role: defaultMatch.role, userName: defaultMatch.name, userEmail: defaultMatch.email });
-            return;
+        try {
+            const result = await signIn(email.trim().toLowerCase(), password);
+            
+            if (result.success) {
+                window.location.reload(); 
+            } else {
+                setError(result.error || 'E-mail ou senha incorretos.');
+            }
+        } catch (err) {
+            setError('Erro ao fazer login. Tente novamente.');
+        } finally {
+            setLoading(false);
         }
-
-        const users = getUsers();
-        const userMatch = users.find(u => u.email === email.trim().toLowerCase() && u.password === password);
-        
-        if (!userMatch) {
-            setError('E-mail ou senha incorretos.');
-            return;
-        }
-        
-        onLogin({ view: 'app', role: userMatch.role, userName: userMatch.name, userEmail: userMatch.email });
     };
 
     return (
@@ -194,9 +172,10 @@ export function LoginScreen({ onLogin, onNavigate }: {
 
                                 <button 
                                     type="submit" 
-                                    className="w-full bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-sky-500/30 hover:shadow-xl hover:shadow-sky-500/40 hover:-translate-y-0.5"
+                                    disabled={loading}
+                                    className="w-full bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-sky-500/30 hover:shadow-xl hover:shadow-sky-500/40 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    Entrar no Sistema
+                                    {loading ? 'Entrando...' : 'Entrar no Sistema'}
                                 </button>
                             </form>
 
@@ -226,6 +205,7 @@ export function RegisterScreen({ onLogin, onNavigate }: {
     onLogin: (result: AuthResult) => void;
     onNavigate: (view: 'login') => void;
 }) {
+    const { signUp } = useAuth();
     const [darkMode, setDarkMode] = React.useState(() => document.documentElement.classList.contains('dark'));
 
     React.useEffect(() => {
@@ -243,8 +223,9 @@ export function RegisterScreen({ onLogin, onNavigate }: {
     const [confirmPassword, setConfirmPassword] = React.useState('');
     const [error, setError] = React.useState('');
     const [success, setSuccess] = React.useState('');
+    const [loading, setLoading] = React.useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
         setSuccess('');
@@ -259,34 +240,30 @@ export function RegisterScreen({ onLogin, onNavigate }: {
             return;
         }
 
-        const emailLower = email.trim().toLowerCase();
+        setLoading(true);
 
-        const defaultEmails = ['admin@sapo.com', 'cliente@sapo.com'];
-        if (defaultEmails.includes(emailLower)) {
-            setError('Este e-mail já está em uso.');
-            return;
+        try {
+            const result = await signUp(
+                email.trim().toLowerCase(),
+                password,
+                name.trim(),
+                area.trim(),
+                'cliente'
+            );
+
+            if (result.success) {
+                setSuccess('Cadastro realizado com sucesso! Redirecionando...');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                setError(result.error || 'Erro ao criar conta. Tente novamente.');
+            }
+        } catch (err) {
+            setError('Erro ao criar conta. Tente novamente.');
+        } finally {
+            setLoading(false);
         }
-
-        const users = getUsers();
-        if (users.some(u => u.email === emailLower)) {
-            setError('Este e-mail já está cadastrado.');
-            return;
-        }
-
-        const newUser: User = {
-            email: emailLower,
-            password,
-            name: name.trim(),
-            area: area.trim(),
-            role: 'cliente'
-        };
-
-        saveUser(newUser);
-        setSuccess('Cadastro realizado com sucesso! Redirecionando para o login...');
-        
-        setTimeout(() => {
-            onNavigate('login');
-        }, 1500);
     };
 
     return (
@@ -481,9 +458,10 @@ export function RegisterScreen({ onLogin, onNavigate }: {
 
                                 <button 
                                     type="submit" 
-                                    className="w-full bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-sky-500/30 hover:shadow-xl hover:shadow-sky-500/40 hover:-translate-y-0.5"
+                                    disabled={loading}
+                                    className="w-full bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-sky-500/30 hover:shadow-xl hover:shadow-sky-500/40 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    Criar Conta
+                                    {loading ? 'Criando conta...' : 'Criar Conta'}
                                 </button>
                             </form>
 

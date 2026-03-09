@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Ship, Star, MessageSquare, Menu, Bell, Search,
   TrendingUp, LogOut, FileText, PlusCircle, Users, UserCheck
 } from 'lucide-react';
 import { useAppData } from './hooks/useAppData';
+import { useAuth } from './hooks/useAuth';
 import { NavItem } from './components/NavItem';
 import { DashboardContent } from './pages/Dashboard';
 import { ReportsContent } from './pages/Reports';
@@ -15,29 +16,51 @@ import { CreateCommentContent } from './pages/CreateComment';
 import { LoginScreen, RegisterScreen, type Role } from './pages/Auth';
 import { TeamContent } from './pages/Team';
 import { UsersContent } from './pages/Users';
+
 type View = 'login' | 'register' | 'app';
+
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [view, setView] = useState<View>('login');
-  const [role, setRole] = useState<Role>('cliente');
-  const [userName, setUserName] = useState('');
-  const [userEmail, setUserEmail] = useState('');
+  const { user, profile, loading: authLoading, signOut } = useAuth();
   const { data, loading } = useAppData();
+
+  // Atualiza a view baseado no estado de autenticação
+  useEffect(() => {
+    if (!authLoading) {
+      if (user && profile) {
+        setView('app');
+      } else {
+        setView('login');
+      }
+    }
+  }, [user, profile, authLoading]);
+
   const handleLogin = ({ role: r, userName: n, userEmail: e }: { view: 'app'; role: Role; userName: string; userEmail: string }) => {
-    setRole(r);
-    setUserName(n);
-    setUserEmail(e);
     setActiveTab('dashboard');
     setView('app');
   };
-  const handleLogout = () => {
+
+  const handleLogout = async () => {
+    await signOut();
     setView('login');
     setActiveTab('dashboard');
   };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-port-gray flex items-center justify-center font-sans">
+        <div className="text-xl font-medium text-gray-600 flex items-center gap-3">
+          Verificando autenticação...
+        </div>
+      </div>
+    );
+  }
   if (view === 'login') return <LoginScreen onLogin={handleLogin} onNavigate={() => setView('register')} />;
   if (view === 'register') return <RegisterScreen onLogin={handleLogin} onNavigate={() => setView('login')} />;
-  if (loading || !data) {
+
+  if (loading || !data || !profile) {
     return (
       <div className="min-h-screen bg-port-gray flex items-center justify-center font-sans">
         <div className="text-xl font-medium text-gray-600 flex items-center gap-3">
@@ -46,6 +69,10 @@ function App() {
       </div>
     );
   }
+
+  const userName = profile.name;
+  const userEmail = profile.email;
+  const role = profile.role;
   const initials = userName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
   const subtitle = role === 'superadmin' ? 'Super Admin' : 'Cliente';
   return (
