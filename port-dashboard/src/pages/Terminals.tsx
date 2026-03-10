@@ -15,6 +15,18 @@ interface Terminal {
   volume?: number;
   operationalCapacity?: number;
   marketShare?: number;
+  // Novos campos
+  totalArea?: number; // Área total (m²)
+  storageCapacity?: number; // Capacidade de armazenagem (TEU ou toneladas)
+  annualCapacity?: number; // Capacidade anual (TEU ou toneladas)
+  avgAnnualThroughput?: number; // Throughput médio anual
+  avgBerthProductivity?: number; // Produtividade média de berço
+  avgShipOperationTime?: number; // Tempo médio de operação do navio (horas)
+  capacityUtilizationRate?: number; // Taxa de utilização da capacidade (%)
+  avgDwellTime?: number; // Tempo médio de permanência do contêiner (dias)
+  craneProductivity?: number; // Produtividade de guindastes (movimentos/hora)
+  avgShipWaitTime?: number; // Tempo médio de espera do navio (horas)
+  yardOccupancyRate?: number; // Taxa de ocupação do pátio (%)
 }
 
 const getTerminals = async (): Promise<Terminal[]> => {
@@ -36,6 +48,18 @@ const getTerminals = async (): Promise<Terminal[]> => {
       efficiency: t.efficiency,
       throughput: t.throughput,
       createdAt: t.created_at,
+      // Novos campos
+      totalArea: t.total_area,
+      storageCapacity: t.storage_capacity,
+      annualCapacity: t.annual_capacity,
+      avgAnnualThroughput: t.avg_annual_throughput,
+      avgBerthProductivity: t.avg_berth_productivity,
+      avgShipOperationTime: t.avg_ship_operation_time,
+      capacityUtilizationRate: t.capacity_utilization_rate,
+      avgDwellTime: t.avg_dwell_time,
+      craneProductivity: t.crane_productivity,
+      avgShipWaitTime: t.avg_ship_wait_time,
+      yardOccupancyRate: t.yard_occupancy_rate,
     }));
   } catch (error) {
     console.error("Erro ao buscar terminais:", error);
@@ -57,6 +81,18 @@ const saveTerminal = async (terminal: Omit<Terminal, "id" | "createdAt">) => {
           efficiency: terminal.efficiency,
           throughput: terminal.throughput,
           created_at: new Date().toISOString(),
+          // Novos campos
+          total_area: terminal.totalArea,
+          storage_capacity: terminal.storageCapacity,
+          annual_capacity: terminal.annualCapacity,
+          avg_annual_throughput: terminal.avgAnnualThroughput,
+          avg_berth_productivity: terminal.avgBerthProductivity,
+          avg_ship_operation_time: terminal.avgShipOperationTime,
+          capacity_utilization_rate: terminal.capacityUtilizationRate,
+          avg_dwell_time: terminal.avgDwellTime,
+          crane_productivity: terminal.craneProductivity,
+          avg_ship_wait_time: terminal.avgShipWaitTime,
+          yard_occupancy_rate: terminal.yardOccupancyRate,
         },
       ])
       .select();
@@ -74,6 +110,17 @@ const saveTerminal = async (terminal: Omit<Terminal, "id" | "createdAt">) => {
       efficiency: newTerminal.efficiency,
       throughput: newTerminal.throughput,
       createdAt: newTerminal.created_at,
+      totalArea: newTerminal.total_area,
+      storageCapacity: newTerminal.storage_capacity,
+      annualCapacity: newTerminal.annual_capacity,
+      avgAnnualThroughput: newTerminal.avg_annual_throughput,
+      avgBerthProductivity: newTerminal.avg_berth_productivity,
+      avgShipOperationTime: newTerminal.avg_ship_operation_time,
+      capacityUtilizationRate: newTerminal.capacity_utilization_rate,
+      avgDwellTime: newTerminal.avg_dwell_time,
+      craneProductivity: newTerminal.crane_productivity,
+      avgShipWaitTime: newTerminal.avg_ship_wait_time,
+      yardOccupancyRate: newTerminal.yard_occupancy_rate,
     };
   } catch (error) {
     console.error("Erro ao salvar terminal:", error);
@@ -118,6 +165,17 @@ export function TerminalsContent({
       volume: 1473041,
       marketShare: 43,
       operationalCapacity: 2000000,
+      totalArea: 596000,
+      storageCapacity: 58000,
+      annualCapacity: 2400000,
+      avgAnnualThroughput: 1473041,
+      avgBerthProductivity: 105,
+      avgShipOperationTime: 18,
+      capacityUtilizationRate: 61,
+      avgDwellTime: 5,
+      craneProductivity: 35,
+      avgShipWaitTime: 4,
+      yardOccupancyRate: 78,
     },
     {
       id: 2,
@@ -131,6 +189,17 @@ export function TerminalsContent({
       volume: 750223,
       marketShare: 22,
       operationalCapacity: 1400000,
+      totalArea: 350000,
+      storageCapacity: 35000,
+      annualCapacity: 1400000,
+      avgAnnualThroughput: 750223,
+      avgBerthProductivity: 85,
+      avgShipOperationTime: 22,
+      capacityUtilizationRate: 54,
+      avgDwellTime: 6,
+      craneProductivity: 28,
+      avgShipWaitTime: 6,
+      yardOccupancyRate: 65,
     },
     {
       id: 3,
@@ -144,6 +213,17 @@ export function TerminalsContent({
       volume: 1178433,
       marketShare: 34.4,
       operationalCapacity: 2500000,
+      totalArea: 490000,
+      storageCapacity: 48000,
+      annualCapacity: 2000000,
+      avgAnnualThroughput: 1178433,
+      avgBerthProductivity: 95,
+      avgShipOperationTime: 20,
+      capacityUtilizationRate: 59,
+      avgDwellTime: 5.5,
+      craneProductivity: 32,
+      avgShipWaitTime: 5,
+      yardOccupancyRate: 72,
     },
     {
       id: 4,
@@ -157,6 +237,17 @@ export function TerminalsContent({
       volume: 23980,
       marketShare: 0.7,
       operationalCapacity: 50000,
+      totalArea: 85000,
+      storageCapacity: 8000,
+      annualCapacity: 100000,
+      avgAnnualThroughput: 23980,
+      avgBerthProductivity: 0,
+      avgShipOperationTime: 0,
+      capacityUtilizationRate: 0,
+      avgDwellTime: 0,
+      craneProductivity: 0,
+      avgShipWaitTime: 0,
+      yardOccupancyRate: 0,
     },
   ];
 
@@ -334,7 +425,21 @@ function AddTerminalModal({
     capacity: "0",
     efficiency: 0,
     throughput: 0,
+    // Novos campos
+    totalArea: 0,
+    storageCapacity: 0,
+    annualCapacity: 0,
+    avgAnnualThroughput: 0,
+    avgBerthProductivity: 0,
+    avgShipOperationTime: 0,
+    capacityUtilizationRate: 0,
+    avgDwellTime: 0,
+    craneProductivity: 0,
+    avgShipWaitTime: 0,
+    yardOccupancyRate: 0,
   });
+
+  const [activeSection, setActiveSection] = useState<'basic' | 'capacity' | 'performance' | 'time'>('basic');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -346,7 +451,7 @@ function AddTerminalModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center rounded-t-2xl">
           <div>
             <h2 className="text-2xl font-bold text-gray-800">
@@ -364,178 +469,529 @@ function AddTerminalModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Nome do Terminal *
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, name: e.target.value }))
-                }
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
-                placeholder="Ex: Terminal Santos XYZ"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Tipo de Carga *
-              </label>
-              <select
-                required
-                value={formData.type}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, type: e.target.value }))
-                }
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
-              >
-                <option value="">Selecione...</option>
-                <option value="Contêineres">Contêineres</option>
-                <option value="Carga Geral">Carga Geral</option>
-                <option value="Granel Sólido">Granel Sólido</option>
-                <option value="Granel Líquido">Granel Líquido</option>
-                <option value="Açúcar">Açúcar</option>
-                <option value="Açúcar e Grãos">Açúcar e Grãos</option>
-                <option value="Multiuso">Multiuso</option>
-                <option value="Outros">Outros</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Status Operacional *
-              </label>
-              <select
-                required
-                value={formData.status}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    status: e.target.value as Terminal["status"],
-                  }))
-                }
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
-              >
-                <option value="Operando">Operando</option>
-                <option value="Manutenção Parcial">Manutenção Parcial</option>
-                <option value="Fechado">Fechado</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Número de Berços *
-              </label>
-              <input
-                type="number"
-                required
-                min="1"
-                max="20"
-                value={formData.docks}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    docks: parseInt(e.target.value),
-                  }))
-                }
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
-                placeholder="Ex: 3"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Ocupação Atual (%) *
-              </label>
-              <input
-                type="number"
-                required
-                min="0"
-                max="100"
-                value={formData.capacity}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, capacity: e.target.value }))
-                }
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
-                placeholder="Ex: 85"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Eficiência Operacional (%) *
-              </label>
-              <input
-                type="number"
-                required
-                min="0"
-                max="100"
-                value={formData.efficiency}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    efficiency: parseInt(e.target.value),
-                  }))
-                }
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
-                placeholder="Ex: 92"
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                Taxa de aproveitamento da capacidade
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Throughput Mensal (mil TEUs) *
-              </label>
-              <input
-                type="number"
-                required
-                min="0"
-                value={formData.throughput}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    throughput: parseInt(e.target.value),
-                  }))
-                }
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
-                placeholder="Ex: 150"
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                Volume movimentado por mês
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-            <p className="text-sm text-blue-800">
-              <strong>Dica:</strong> Os dados de eficiência operacional ajudam a
-              identificar gargalos e oportunidades de melhoria na gestão
-              portuária.
-            </p>
-          </div>
-
-          <div className="flex gap-3 pt-4">
+        {/* Tabs de navegação */}
+        <div className="border-b border-gray-200 px-6 bg-gray-50">
+          <nav className="flex gap-1 -mb-px">
             <button
               type="button"
-              onClick={onClose}
-              className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-colors"
+              onClick={() => setActiveSection('basic')}
+              className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                activeSection === 'basic'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
             >
-              Cancelar
+              Dados Básicos
             </button>
             <button
-              type="submit"
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg shadow-blue-500/30"
+              type="button"
+              onClick={() => setActiveSection('capacity')}
+              className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                activeSection === 'capacity'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
             >
-              Cadastrar Terminal
+              Capacidade
             </button>
+            <button
+              type="button"
+              onClick={() => setActiveSection('performance')}
+              className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                activeSection === 'performance'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Desempenho
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveSection('time')}
+              className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                activeSection === 'time'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Tempos e Taxas
+            </button>
+          </nav>
+        </div>
+
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto">
+          <div className="p-6 space-y-5">
+            {/* Seção: Dados Básicos */}
+            {activeSection === 'basic' && (
+              <div className="space-y-5">
+                <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                  <span className="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-sm font-bold">1</span>
+                  Informações Básicas
+                </h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Nome do Terminal *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={(e) =>
+                        setFormData((prev) => ({ ...prev, name: e.target.value }))
+                      }
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
+                      placeholder="Ex: Terminal Santos XYZ"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Tipo de Carga *
+                    </label>
+                    <select
+                      required
+                      value={formData.type}
+                      onChange={(e) =>
+                        setFormData((prev) => ({ ...prev, type: e.target.value }))
+                      }
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
+                    >
+                      <option value="">Selecione...</option>
+                      <option value="Contêineres">Contêineres</option>
+                      <option value="Carga Geral">Carga Geral</option>
+                      <option value="Granel Sólido">Granel Sólido</option>
+                      <option value="Granel Líquido">Granel Líquido</option>
+                      <option value="Açúcar">Açúcar</option>
+                      <option value="Açúcar e Grãos">Açúcar e Grãos</option>
+                      <option value="Multiuso">Multiuso</option>
+                      <option value="Outros">Outros</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Status Operacional *
+                    </label>
+                    <select
+                      required
+                      value={formData.status}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          status: e.target.value as Terminal["status"],
+                        }))
+                      }
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
+                    >
+                      <option value="Operando">Operando</option>
+                      <option value="Manutenção Parcial">Manutenção Parcial</option>
+                      <option value="Fechado">Fechado</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Número de Berços *
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      min="1"
+                      max="20"
+                      value={formData.docks}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          docks: parseInt(e.target.value) || 0,
+                        }))
+                      }
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
+                      placeholder="Ex: 3"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Área Total do Terminal (m²)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={formData.totalArea}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          totalArea: parseInt(e.target.value) || 0,
+                        }))
+                      }
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
+                      placeholder="Ex: 500000"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Seção: Capacidade */}
+            {activeSection === 'capacity' && (
+              <div className="space-y-5">
+                <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                  <span className="w-8 h-8 bg-green-100 text-green-600 rounded-lg flex items-center justify-center text-sm font-bold">2</span>
+                  Capacidade e Armazenagem
+                </h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Capacidade de Armazenagem (TEU)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={formData.storageCapacity}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          storageCapacity: parseInt(e.target.value) || 0,
+                        }))
+                      }
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
+                      placeholder="Ex: 50000"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Capacidade estática de armazenagem
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Capacidade Anual do Terminal (TEU)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={formData.annualCapacity}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          annualCapacity: parseInt(e.target.value) || 0,
+                        }))
+                      }
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
+                      placeholder="Ex: 2000000"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Capacidade máxima de movimentação anual
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Ocupação Atual (%) *
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      min="0"
+                      max="100"
+                      value={formData.capacity}
+                      onChange={(e) =>
+                        setFormData((prev) => ({ ...prev, capacity: e.target.value }))
+                      }
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
+                      placeholder="Ex: 85"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Taxa de Utilização da Capacidade (%)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      max="100"
+                      value={formData.capacityUtilizationRate}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          capacityUtilizationRate: parseFloat(e.target.value) || 0,
+                        }))
+                      }
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
+                      placeholder="Ex: 65"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Percentual da capacidade efetivamente utilizada
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Taxa de Ocupação do Pátio (%)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      max="100"
+                      value={formData.yardOccupancyRate}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          yardOccupancyRate: parseFloat(e.target.value) || 0,
+                        }))
+                      }
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
+                      placeholder="Ex: 75"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Nível de ocupação da área de pátio
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Seção: Desempenho */}
+            {activeSection === 'performance' && (
+              <div className="space-y-5">
+                <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                  <span className="w-8 h-8 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center text-sm font-bold">3</span>
+                  Métricas de Desempenho
+                </h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Eficiência Operacional (%) *
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      min="0"
+                      max="100"
+                      value={formData.efficiency}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          efficiency: parseInt(e.target.value) || 0,
+                        }))
+                      }
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
+                      placeholder="Ex: 92"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Taxa de aproveitamento da capacidade
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Throughput Mensal (mil TEUs) *
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      min="0"
+                      value={formData.throughput}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          throughput: parseInt(e.target.value) || 0,
+                        }))
+                      }
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
+                      placeholder="Ex: 150"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Volume movimentado por mês
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Throughput Médio Anual (TEU)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={formData.avgAnnualThroughput}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          avgAnnualThroughput: parseInt(e.target.value) || 0,
+                        }))
+                      }
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
+                      placeholder="Ex: 1500000"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Volume médio movimentado por ano
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Produtividade Média de Berço (mov/hora)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={formData.avgBerthProductivity}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          avgBerthProductivity: parseFloat(e.target.value) || 0,
+                        }))
+                      }
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
+                      placeholder="Ex: 100"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Movimentos por hora de berço ocupado
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Produtividade de Guindastes (mov/hora)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={formData.craneProductivity}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          craneProductivity: parseFloat(e.target.value) || 0,
+                        }))
+                      }
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
+                      placeholder="Ex: 35"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Movimentos por hora por guindaste
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Seção: Tempos e Taxas */}
+            {activeSection === 'time' && (
+              <div className="space-y-5">
+                <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                  <span className="w-8 h-8 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center text-sm font-bold">4</span>
+                  Tempos Operacionais
+                </h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Tempo Médio de Operação do Navio (horas)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.1"
+                      value={formData.avgShipOperationTime}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          avgShipOperationTime: parseFloat(e.target.value) || 0,
+                        }))
+                      }
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
+                      placeholder="Ex: 18"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Tempo médio de atracação a desatracação
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Tempo Médio de Espera do Navio (horas)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.1"
+                      value={formData.avgShipWaitTime}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          avgShipWaitTime: parseFloat(e.target.value) || 0,
+                        }))
+                      }
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
+                      placeholder="Ex: 4"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Tempo de espera antes da atracação
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Tempo Médio de Permanência do Contêiner - Dwell Time (dias)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.1"
+                      value={formData.avgDwellTime}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          avgDwellTime: parseFloat(e.target.value) || 0,
+                        }))
+                      }
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
+                      placeholder="Ex: 5"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Tempo médio que o contêiner permanece no terminal
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
+                  <p className="text-sm text-orange-800">
+                    <strong>💡 Dica:</strong> Tempos menores de operação e espera geralmente indicam maior eficiência operacional. 
+                    O dwell time ideal varia conforme o tipo de terminal, mas valores mais baixos reduzem custos de armazenagem.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+              <p className="text-sm text-blue-800">
+                <strong>Dica:</strong> Os dados de eficiência operacional ajudam a
+                identificar gargalos e oportunidades de melhoria na gestão
+                portuária.
+              </p>
+            </div>
+          </div>
+
+          <div className="sticky bottom-0 bg-white border-t border-gray-200 px-6 py-4">
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg shadow-blue-500/30"
+              >
+                Cadastrar Terminal
+              </button>
+            </div>
           </div>
         </form>
       </div>
