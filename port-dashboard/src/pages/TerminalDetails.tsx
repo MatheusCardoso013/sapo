@@ -50,22 +50,22 @@ const defaultTerminals: Terminal[] = [
     type: "Contêineres",
     docks: 3,
     status: "Operando",
-    capacity: "95%",
+    capacity: "127%",
     efficiency: 92,
-    throughput: 150,
+    throughput: 212,
     volume: 1473041,
     marketShare: 43,
     operationalCapacity: 2000000,
     volumeTeu: 2540000,
     totalArea: 596000,
-    storageCapacity: 58000,
-    annualCapacity: 2400000,
+    storageCapacity: 45000,
+    annualCapacity: 2000000,
     avgAnnualThroughput: 1473041,
     avgBerthProductivity: 105,
     avgShipOperationTime: 18,
-    capacityUtilizationRate: 61,
-    avgDwellTime: 5,
-    craneProductivity: 35,
+    capacityUtilizationRate: 0,
+    avgDwellTime: 26.8,
+    craneProductivity: 109,
     avgShipWaitTime: 4,
     yardOccupancyRate: 78,
   },
@@ -73,24 +73,24 @@ const defaultTerminals: Terminal[] = [
     id: 2,
     name: "DP World Santos",
     type: "Contêineres",
-    docks: 4,
+    docks: 2,
     status: "Manutenção Parcial",
-    capacity: "78%",
+    capacity: "92%",
     efficiency: 78,
     throughput: 110,
     volume: 750223,
     marketShare: 22,
     operationalCapacity: 1400000,
     volumeTeu: 1290000,
-    totalArea: 350000,
+    totalArea: 845000,
     storageCapacity: 35000,
     annualCapacity: 1400000,
     avgAnnualThroughput: 750223,
     avgBerthProductivity: 85,
     avgShipOperationTime: 22,
     capacityUtilizationRate: 54,
-    avgDwellTime: 6,
-    craneProductivity: 28,
+    avgDwellTime: 13.6,
+    craneProductivity: 90,
     avgShipWaitTime: 6,
     yardOccupancyRate: 65,
   },
@@ -100,22 +100,22 @@ const defaultTerminals: Terminal[] = [
     type: "Contêineres",
     docks: 3,
     status: "Operando",
-    capacity: "88%",
+    capacity: "81%",
     efficiency: 88,
-    throughput: 95,
+    throughput: 166,
     volume: 1178433,
     marketShare: 34.4,
     operationalCapacity: 2500000,
     volumeTeu: 2030000,
     totalArea: 490000,
     storageCapacity: 48000,
-    annualCapacity: 2000000,
+    annualCapacity: 2500000,
     avgAnnualThroughput: 1178433,
     avgBerthProductivity: 95,
     avgShipOperationTime: 20,
     capacityUtilizationRate: 59,
-    avgDwellTime: 5.5,
-    craneProductivity: 32,
+    avgDwellTime: 21.4,
+    craneProductivity: 100,
     avgShipWaitTime: 5,
     yardOccupancyRate: 72,
   },
@@ -283,8 +283,8 @@ export function TerminalDetailsContent({
           </div>
           <div className="w-full bg-gray-100 rounded-full h-2">
             <div
-              className={`h-2 rounded-full ${parseInt(terminal.capacity) > 90 ? "bg-red-500" : parseInt(terminal.capacity) > 75 ? "bg-yellow-500" : "bg-green-500"}`}
-              style={{ width: terminal.capacity }}
+              className={`h-2 rounded-full ${parseFloat(terminal.capacity) > 90 ? "bg-red-500" : parseFloat(terminal.capacity) > 75 ? "bg-yellow-500" : "bg-green-500"}`}
+              style={{ width: `${Math.min(parseFloat(terminal.capacity), 100)}%` }}
             ></div>
           </div>
         </div>
@@ -388,49 +388,7 @@ export function TerminalDetailsContent({
           </div>
           <span className="text-xs text-purple-600">do porto</span>
         </div>
-
-        <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4 border border-orange-200">
-          <div className="flex items-center gap-2 mb-2">
-            <Gauge className="text-orange-600" size={18} />
-            <span className="text-xs font-medium text-orange-700">
-              Utilização
-            </span>
-          </div>
-          <div className="text-xl font-bold text-orange-900">
-            {terminal.capacityUtilizationRate
-              ? `${terminal.capacityUtilizationRate}%`
-              : "N/A"}
-          </div>
-          <span className="text-xs text-orange-600">da capacidade</span>
         </div>
-
-        <div className="bg-gradient-to-br from-cyan-50 to-cyan-100 rounded-xl p-4 border border-cyan-200">
-          <div className="flex items-center gap-2 mb-2">
-            <Timer className="text-cyan-600" size={18} />
-            <span className="text-xs font-medium text-cyan-700">
-              Dwell Time
-            </span>
-          </div>
-          <div className="text-xl font-bold text-cyan-900">
-            {terminal.avgDwellTime ? terminal.avgDwellTime : "N/A"}
-          </div>
-          <span className="text-xs text-cyan-600">dias</span>
-        </div>
-
-        <div className="bg-gradient-to-br from-rose-50 to-rose-100 rounded-xl p-4 border border-rose-200">
-          <div className="flex items-center gap-2 mb-2">
-            <Clock className="text-rose-600" size={18} />
-            <span className="text-xs font-medium text-rose-700">
-              Espera Navio
-            </span>
-          </div>
-          <div className="text-xl font-bold text-rose-900">
-            {terminal.avgShipWaitTime ? terminal.avgShipWaitTime : "N/A"}
-          </div>
-          <span className="text-xs text-rose-600">horas</span>
-        </div>
-      </div>
-
       {/* Informações gerais e Métricas de Desempenho */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -518,26 +476,6 @@ export function TerminalDetailsContent({
                 {terminal.throughput}k TEUs
               </span>
             </div>
-            <div className="flex justify-between py-3 border-b border-gray-100">
-              <span className="text-gray-600 font-medium">
-                Throughput Médio Anual
-              </span>
-              <span className="text-gray-800 font-semibold">
-                {terminal.avgAnnualThroughput
-                  ? `${formatNumber(terminal.avgAnnualThroughput)} TEU`
-                  : "N/A"}
-              </span>
-            </div>
-            <div className="flex justify-between py-3 border-b border-gray-100">
-              <span className="text-gray-600 font-medium">
-                Taxa de Utilização
-              </span>
-              <span className="text-gray-800 font-semibold">
-                {terminal.capacityUtilizationRate
-                  ? `${terminal.capacityUtilizationRate}%`
-                  : "N/A"}
-              </span>
-            </div>
             <div className="flex justify-between py-3">
               <span className="text-gray-600 font-medium">
                 Capacidade Estimada
@@ -561,11 +499,41 @@ export function TerminalDetailsContent({
           <div className="space-y-3">
             <div className="flex justify-between py-3 border-b border-gray-100">
               <span className="text-gray-600 font-medium">
-                Capacidade de Armazenagem
+                Total de Containers
+              </span>
+              <span className="text-gray-800 font-semibold">
+                {terminal.storageCapacity
+                  ? `${formatNumber(terminal.avgAnnualThroughput)} Containers`
+                  : "N/A"}
+              </span>
+            </div>
+            <div className="flex justify-between py-3 border-b border-gray-100">
+              <span className="text-gray-600 font-medium">
+                Capacidade de Armazenagem no pátio
               </span>
               <span className="text-gray-800 font-semibold">
                 {terminal.storageCapacity
                   ? `${formatNumber(terminal.storageCapacity)} TEU`
+                  : "N/A"}
+              </span>
+            </div>
+            <div className="flex justify-between py-3 border-b border-gray-100">
+              <span className="text-gray-600 font-medium">
+                Estimativa em Containers (toneladas)
+              </span>
+              <span className="text-gray-800 font-semibold">
+                {terminal.storageCapacity
+                  ? `${formatNumber(terminal.avgDwellTime)} toneladas`
+                  : "N/A"}
+              </span>
+            </div>
+            <div className="flex justify-between py-3 border-b border-gray-100">
+              <span className="text-gray-600 font-medium">
+                Movimento por hora
+              </span>
+              <span className="text-gray-800 font-semibold">
+                {terminal.storageCapacity
+                  ? `${formatNumber(terminal.craneProductivity)} MPH`
                   : "N/A"}
               </span>
             </div>
@@ -579,24 +547,8 @@ export function TerminalDetailsContent({
                   : "N/A"}
               </span>
             </div>
-            <div className="flex justify-between py-3 border-b border-gray-100">
-              <span className="text-gray-600 font-medium">
-                Taxa de Ocupação do Pátio
-              </span>
-              <span className="text-gray-800 font-semibold">
-                {terminal.yardOccupancyRate
-                  ? `${terminal.yardOccupancyRate}%`
-                  : "N/A"}
-              </span>
-            </div>
-            <div className="flex justify-between py-3 border-b border-gray-100">
-              <span className="text-gray-600 font-medium">Volume Atual</span>
-              <span className="text-gray-800 font-semibold">
-                {terminal.volume
-                  ? `${formatNumber(terminal.volume)} TEU`
-                  : "N/A"}
-              </span>
-            </div>
+            
+            
             {terminal.volumeTeu && (
               <div className="flex justify-between py-3">
                 <span className="text-gray-600 font-medium">
@@ -709,7 +661,7 @@ export function TerminalDetailsContent({
       </div>
 
       {/* Tempos Operacionais */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      {/* <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
           <Clock className="text-orange-500" size={22} />
           Tempos Operacionais
@@ -766,7 +718,7 @@ export function TerminalDetailsContent({
             </span>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Análise de performance */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -845,27 +797,7 @@ export function TerminalDetailsContent({
                     Ocupação Crítica
                   </h3>
                   <p className="text-sm text-orange-700">
-                    Ocupação acima de 90%. Risco de congestionamento.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {terminal.avgDwellTime !== undefined && terminal.avgDwellTime > 7 && (
-            <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-              <div className="flex items-start gap-3">
-                <Timer
-                  className="text-purple-600 flex-shrink-0 mt-0.5"
-                  size={20}
-                />
-                <div>
-                  <h3 className="font-semibold text-purple-800 mb-1">
-                    Dwell Time Alto
-                  </h3>
-                  <p className="text-sm text-purple-700">
-                    Tempo de permanência acima de 7 dias. Considere otimizar
-                    processos.
+                    Ocupação acima de 100%. Risco real.
                   </p>
                 </div>
               </div>
