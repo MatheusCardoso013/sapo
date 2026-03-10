@@ -603,9 +603,7 @@ export function TerminalDetailsContent({
                   Volume TEU Anual
                 </span>
                 <span className="text-blue-600 font-bold text-lg">
-                  {terminal.volumeTeu >= 1000
-                    ? `${(terminal.volumeTeu / 1000).toFixed(2)}M TEU`
-                    : `${formatNumber(terminal.volumeTeu)}k TEU`}
+                  {formatNumber(terminal.volumeTeu)} TEU
                 </span>
               </div>
             )}
@@ -636,7 +634,7 @@ export function TerminalDetailsContent({
           )}
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        {/* <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
             <Gauge className="text-purple-500" size={22} />
             Produtividade
@@ -682,10 +680,10 @@ export function TerminalDetailsContent({
                   : "N/A"}
               </span>
             </div>
-          </div>
+          </div> */}
 
-          {/* Indicador de produtividade */}
-          {terminal.avgBerthProductivity !== undefined && (
+        {/* Indicador de produtividade */}
+        {/* {terminal.avgBerthProductivity !== undefined && (
             <div className="mt-4 pt-4 border-t border-gray-100">
               <div className="flex items-center gap-3">
                 <div
@@ -707,7 +705,7 @@ export function TerminalDetailsContent({
               </div>
             </div>
           )}
-        </div>
+        </div> */}
       </div>
 
       {/* Tempos Operacionais */}

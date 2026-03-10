@@ -169,7 +169,7 @@ export function TerminalsContent({
       volume: 1473041,
       marketShare: 43,
       operationalCapacity: 2000000,
-      volumeTeu: 2540, // 2.54 milhões TEU
+      volumeTeu: 2540000,
       totalArea: 596000,
       storageCapacity: 58000,
       annualCapacity: 2400000,
@@ -194,7 +194,7 @@ export function TerminalsContent({
       volume: 750223,
       marketShare: 22,
       operationalCapacity: 1400000,
-      volumeTeu: 1290, // 1.29 milhões TEU
+      volumeTeu: 1290000,
       totalArea: 350000,
       storageCapacity: 35000,
       annualCapacity: 1400000,
@@ -219,7 +219,7 @@ export function TerminalsContent({
       volume: 1178433,
       marketShare: 34.4,
       operationalCapacity: 2500000,
-      volumeTeu: 2030, // 2.03 milhões TEU
+      volumeTeu: 2030000,
       totalArea: 490000,
       storageCapacity: 48000,
       annualCapacity: 2000000,
@@ -244,7 +244,7 @@ export function TerminalsContent({
       volume: 23980,
       marketShare: 0.7,
       operationalCapacity: 50000,
-      volumeTeu: 40, // 40 mil TEU
+      volumeTeu: 40000,
       totalArea: 85000,
       storageCapacity: 8000,
       annualCapacity: 100000,
@@ -275,6 +275,11 @@ export function TerminalsContent({
     } finally {
       setLoading(false);
     }
+  };
+
+  const formatNumber = (num: number | undefined) => {
+    if (num === undefined || num === null) return "N/A";
+    return num.toLocaleString("pt-BR");
   };
 
   const handleAddTerminal = async (
@@ -363,7 +368,14 @@ export function TerminalsContent({
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-500">Ocupação</span>
                   <span className="font-medium text-gray-700">
-                    {terminal.capacity}
+                    {terminal.operationalCapacity && terminal.volumeTeu
+                      ? (
+                          (terminal?.volumeTeu /
+                            terminal?.operationalCapacity) *
+                          100
+                        ).toFixed(2)
+                      : 0}
+                    %
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
@@ -384,9 +396,7 @@ export function TerminalsContent({
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500">Volume TEU</span>
                     <span className="font-bold text-blue-600">
-                      {terminal.volumeTeu >= 1000
-                        ? `${(terminal.volumeTeu / 1000).toFixed(2)}M`
-                        : `${terminal.volumeTeu}k`}
+                      {formatNumber(terminal.volumeTeu)}
                     </span>
                   </div>
                 )}
