@@ -8,8 +8,6 @@ import {
   Activity,
   Clock,
   Warehouse,
-  Gauge,
-  Timer,
   BarChart3,
   Box,
 } from "lucide-react";
