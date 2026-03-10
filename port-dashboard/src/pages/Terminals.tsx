@@ -15,6 +15,7 @@ interface Terminal {
   volume?: number;
   operationalCapacity?: number;
   marketShare?: number;
+  volumeTeu?: number; // Volume em TEU
   // Novos campos
   totalArea?: number; // Área total (m²)
   storageCapacity?: number; // Capacidade de armazenagem (TEU ou toneladas)
@@ -48,6 +49,7 @@ const getTerminals = async (): Promise<Terminal[]> => {
       efficiency: t.efficiency,
       throughput: t.throughput,
       createdAt: t.created_at,
+      volumeTeu: t.volume_teu,
       // Novos campos
       totalArea: t.total_area,
       storageCapacity: t.storage_capacity,
@@ -81,6 +83,7 @@ const saveTerminal = async (terminal: Omit<Terminal, "id" | "createdAt">) => {
           efficiency: terminal.efficiency,
           throughput: terminal.throughput,
           created_at: new Date().toISOString(),
+          volume_teu: terminal.volumeTeu,
           // Novos campos
           total_area: terminal.totalArea,
           storage_capacity: terminal.storageCapacity,
@@ -110,6 +113,7 @@ const saveTerminal = async (terminal: Omit<Terminal, "id" | "createdAt">) => {
       efficiency: newTerminal.efficiency,
       throughput: newTerminal.throughput,
       createdAt: newTerminal.created_at,
+      volumeTeu: newTerminal.volume_teu,
       totalArea: newTerminal.total_area,
       storageCapacity: newTerminal.storage_capacity,
       annualCapacity: newTerminal.annual_capacity,
@@ -165,6 +169,7 @@ export function TerminalsContent({
       volume: 1473041,
       marketShare: 43,
       operationalCapacity: 2000000,
+      volumeTeu: 2540, // 2.54 milhões TEU
       totalArea: 596000,
       storageCapacity: 58000,
       annualCapacity: 2400000,
@@ -189,6 +194,7 @@ export function TerminalsContent({
       volume: 750223,
       marketShare: 22,
       operationalCapacity: 1400000,
+      volumeTeu: 1290, // 1.29 milhões TEU
       totalArea: 350000,
       storageCapacity: 35000,
       annualCapacity: 1400000,
@@ -213,6 +219,7 @@ export function TerminalsContent({
       volume: 1178433,
       marketShare: 34.4,
       operationalCapacity: 2500000,
+      volumeTeu: 2030, // 2.03 milhões TEU
       totalArea: 490000,
       storageCapacity: 48000,
       annualCapacity: 2000000,
@@ -237,6 +244,7 @@ export function TerminalsContent({
       volume: 23980,
       marketShare: 0.7,
       operationalCapacity: 50000,
+      volumeTeu: 40, // 40 mil TEU
       totalArea: 85000,
       storageCapacity: 8000,
       annualCapacity: 100000,
@@ -372,6 +380,16 @@ export function TerminalsContent({
                     {terminal.throughput}k TEU
                   </span>
                 </div>
+                {terminal.volumeTeu && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">Volume TEU</span>
+                    <span className="font-bold text-blue-600">
+                      {terminal.volumeTeu >= 1000
+                        ? `${(terminal.volumeTeu / 1000).toFixed(2)}M`
+                        : `${terminal.volumeTeu}k`}
+                    </span>
+                  </div>
+                )}
               </div>
               <div className="w-full bg-gray-100 rounded-full h-1.5 mb-5 overflow-hidden">
                 <div
@@ -425,6 +443,7 @@ function AddTerminalModal({
     capacity: "0",
     efficiency: 0,
     throughput: 0,
+    volumeTeu: 0,
     // Novos campos
     totalArea: 0,
     storageCapacity: 0,
@@ -439,7 +458,9 @@ function AddTerminalModal({
     yardOccupancyRate: 0,
   });
 
-  const [activeSection, setActiveSection] = useState<'basic' | 'capacity' | 'performance' | 'time'>('basic');
+  const [activeSection, setActiveSection] = useState<
+    "basic" | "capacity" | "performance" | "time"
+  >("basic");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -474,44 +495,44 @@ function AddTerminalModal({
           <nav className="flex gap-1 -mb-px">
             <button
               type="button"
-              onClick={() => setActiveSection('basic')}
+              onClick={() => setActiveSection("basic")}
               className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-                activeSection === 'basic'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
+                activeSection === "basic"
+                  ? "border-blue-500 text-blue-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700"
               }`}
             >
               Dados Básicos
             </button>
             <button
               type="button"
-              onClick={() => setActiveSection('capacity')}
+              onClick={() => setActiveSection("capacity")}
               className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-                activeSection === 'capacity'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
+                activeSection === "capacity"
+                  ? "border-blue-500 text-blue-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700"
               }`}
             >
               Capacidade
             </button>
             <button
               type="button"
-              onClick={() => setActiveSection('performance')}
+              onClick={() => setActiveSection("performance")}
               className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-                activeSection === 'performance'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
+                activeSection === "performance"
+                  ? "border-blue-500 text-blue-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700"
               }`}
             >
               Desempenho
             </button>
             <button
               type="button"
-              onClick={() => setActiveSection('time')}
+              onClick={() => setActiveSection("time")}
               className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-                activeSection === 'time'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
+                activeSection === "time"
+                  ? "border-blue-500 text-blue-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700"
               }`}
             >
               Tempos e Taxas
@@ -522,13 +543,15 @@ function AddTerminalModal({
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto">
           <div className="p-6 space-y-5">
             {/* Seção: Dados Básicos */}
-            {activeSection === 'basic' && (
+            {activeSection === "basic" && (
               <div className="space-y-5">
                 <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                  <span className="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-sm font-bold">1</span>
+                  <span className="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-sm font-bold">
+                    1
+                  </span>
                   Informações Básicas
                 </h3>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="md:col-span-2">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -539,7 +562,10 @@ function AddTerminalModal({
                       required
                       value={formData.name}
                       onChange={(e) =>
-                        setFormData((prev) => ({ ...prev, name: e.target.value }))
+                        setFormData((prev) => ({
+                          ...prev,
+                          name: e.target.value,
+                        }))
                       }
                       className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
                       placeholder="Ex: Terminal Santos XYZ"
@@ -554,7 +580,10 @@ function AddTerminalModal({
                       required
                       value={formData.type}
                       onChange={(e) =>
-                        setFormData((prev) => ({ ...prev, type: e.target.value }))
+                        setFormData((prev) => ({
+                          ...prev,
+                          type: e.target.value,
+                        }))
                       }
                       className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
                     >
@@ -586,7 +615,9 @@ function AddTerminalModal({
                       className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
                     >
                       <option value="Operando">Operando</option>
-                      <option value="Manutenção Parcial">Manutenção Parcial</option>
+                      <option value="Manutenção Parcial">
+                        Manutenção Parcial
+                      </option>
                       <option value="Fechado">Fechado</option>
                     </select>
                   </div>
@@ -635,10 +666,12 @@ function AddTerminalModal({
             )}
 
             {/* Seção: Capacidade */}
-            {activeSection === 'capacity' && (
+            {activeSection === "capacity" && (
               <div className="space-y-5">
                 <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                  <span className="w-8 h-8 bg-green-100 text-green-600 rounded-lg flex items-center justify-center text-sm font-bold">2</span>
+                  <span className="w-8 h-8 bg-green-100 text-green-600 rounded-lg flex items-center justify-center text-sm font-bold">
+                    2
+                  </span>
                   Capacidade e Armazenagem
                 </h3>
 
@@ -698,7 +731,10 @@ function AddTerminalModal({
                       max="100"
                       value={formData.capacity}
                       onChange={(e) =>
-                        setFormData((prev) => ({ ...prev, capacity: e.target.value }))
+                        setFormData((prev) => ({
+                          ...prev,
+                          capacity: e.target.value,
+                        }))
                       }
                       className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
                       placeholder="Ex: 85"
@@ -717,7 +753,8 @@ function AddTerminalModal({
                       onChange={(e) =>
                         setFormData((prev) => ({
                           ...prev,
-                          capacityUtilizationRate: parseFloat(e.target.value) || 0,
+                          capacityUtilizationRate:
+                            parseFloat(e.target.value) || 0,
                         }))
                       }
                       className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
@@ -755,10 +792,12 @@ function AddTerminalModal({
             )}
 
             {/* Seção: Desempenho */}
-            {activeSection === 'performance' && (
+            {activeSection === "performance" && (
               <div className="space-y-5">
                 <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                  <span className="w-8 h-8 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center text-sm font-bold">3</span>
+                  <span className="w-8 h-8 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center text-sm font-bold">
+                    3
+                  </span>
                   Métricas de Desempenho
                 </h3>
 
@@ -807,6 +846,29 @@ function AddTerminalModal({
                     />
                     <p className="text-xs text-gray-500 mt-1">
                       Volume movimentado por mês
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Volume TEU Anual (mil TEUs) *
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      min="0"
+                      value={formData.volumeTeu}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          volumeTeu: parseInt(e.target.value) || 0,
+                        }))
+                      }
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-colors"
+                      placeholder="Ex: 2540"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Volume total anual em TEU (em milhares)
                     </p>
                   </div>
 
@@ -880,10 +942,12 @@ function AddTerminalModal({
             )}
 
             {/* Seção: Tempos e Taxas */}
-            {activeSection === 'time' && (
+            {activeSection === "time" && (
               <div className="space-y-5">
                 <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                  <span className="w-8 h-8 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center text-sm font-bold">4</span>
+                  <span className="w-8 h-8 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center text-sm font-bold">
+                    4
+                  </span>
                   Tempos Operacionais
                 </h3>
 
@@ -936,7 +1000,8 @@ function AddTerminalModal({
 
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Tempo Médio de Permanência do Contêiner - Dwell Time (dias)
+                      Tempo Médio de Permanência do Contêiner - Dwell Time
+                      (dias)
                     </label>
                     <input
                       type="number"
@@ -960,8 +1025,10 @@ function AddTerminalModal({
 
                 <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
                   <p className="text-sm text-orange-800">
-                    <strong>💡 Dica:</strong> Tempos menores de operação e espera geralmente indicam maior eficiência operacional. 
-                    O dwell time ideal varia conforme o tipo de terminal, mas valores mais baixos reduzem custos de armazenagem.
+                    <strong>💡 Dica:</strong> Tempos menores de operação e
+                    espera geralmente indicam maior eficiência operacional. O
+                    dwell time ideal varia conforme o tipo de terminal, mas
+                    valores mais baixos reduzem custos de armazenagem.
                   </p>
                 </div>
               </div>
@@ -969,8 +1036,8 @@ function AddTerminalModal({
 
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
               <p className="text-sm text-blue-800">
-                <strong>Dica:</strong> Os dados de eficiência operacional ajudam a
-                identificar gargalos e oportunidades de melhoria na gestão
+                <strong>Dica:</strong> Os dados de eficiência operacional ajudam
+                a identificar gargalos e oportunidades de melhoria na gestão
                 portuária.
               </p>
             </div>
